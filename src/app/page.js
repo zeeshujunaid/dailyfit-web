@@ -30,7 +30,7 @@ export default function Loader() {
       if (allDataFetched) {
         console.log("✅ All collections saved to localStorage");
         localStorage.removeItem("retryCount"); // reset if success
-        router.push("/home");
+        router.push("/Home");
       } else {
         handleRetry();
       }
