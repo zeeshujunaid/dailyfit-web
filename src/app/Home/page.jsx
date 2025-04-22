@@ -1,4 +1,5 @@
 import Categorysection from "../../../components/categorysection";
+import Feautredcard from "../../../components/Feautredcard";
 import Navbar from "../../../components/Navbar";
 
 export default function HeroSection() {
@@ -23,6 +24,7 @@ export default function HeroSection() {
       </div>
 
       <Categorysection />
+      <Feautredcard/>
     </div>
   );
 }
