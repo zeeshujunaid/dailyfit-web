@@ -1,8 +1,10 @@
 "use client";
 
 import { ShoppingCart } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
+  const router = useRouter();
   // Smooth scroll to section by ID
   const scrollToSection = (id) => {
     const section = document.getElementById(id);
@@ -49,7 +51,7 @@ export default function Navbar() {
 
         {/* Cart Icon */}
         <div className="flex space-x-8 items-center">
-          <button className="relative">
+          <button className="relative" onClick={()=>router.push("/Cart")}>
             <ShoppingCart className="h-8 w-8 text-gray-700 hover:text-red-500" />
           </button>
         </div>

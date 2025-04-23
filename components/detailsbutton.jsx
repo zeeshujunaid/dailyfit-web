@@ -1,74 +1,86 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Adtocart from "./Adtocart";
 
 export default function ProductDetailsButton({ product }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [quantity, setQuantity] = useState(1);
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
+    setQuantity(1); // reset quantity on open
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
+  const closeModal = () => setIsModalOpen(false);
 
-  const handleAddToCart = () => {
-    console.log("Product added to cart:", product);
-    closeModal();
-  };
-
-  // Disable body scroll when modal is open
   useEffect(() => {
-    if (isModalOpen) {
-      document.body.classList.add("overflow-hidden");
-    } else {
-      document.body.classList.remove("overflow-hidden");
-    }
-
-    // Cleanup on unmount
-    return () => {
-      document.body.classList.remove("overflow-hidden");
-    };
+    document.body.classList.toggle("overflow-hidden", isModalOpen);
+    return () => document.body.classList.remove("overflow-hidden");
   }, [isModalOpen]);
+
+  const increaseQty = () => setQuantity(prev => prev + 1);
+  const decreaseQty = () => setQuantity(prev => (prev > 1 ? prev - 1 : 1));
 
   return (
     <>
       <button
         onClick={handleOpenModal}
-        className="bg-blue-500 text-white py-2 px-4 rounded-lg"
+        className="bg-red-500 text-white py-2 px-4 rounded-md shadow hover:bg-red-600 transition duration-300"
       >
         View Details
       </button>
 
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex justify-center items-center  bg-opacity-60">
-          <div className="relative bg-white bg-opacity-20 backdrop-blur-lg p-8 rounded-lg shadow-2xl w-[90%] max-w-md transition-all">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm transition-all duration-300">
+          <div className="relative bg-white/20 border border-white/30 backdrop-blur-2xl p-6 rounded-2xl w-[90%] max-w-md shadow-xl text-white">
+            
+            {/* Close Button */}
             <button
               onClick={closeModal}
-              className="absolute top-3 right-4 text-black text-2xl font-bold"
+              className="absolute top-3 right-4 text-white text-2xl font-bold hover:text-red-400"
             >
               ×
             </button>
 
+            {/* Product Image */}
             <div className="flex justify-center mb-4">
               <img
                 src={product.image1}
                 alt={product.name}
-                className="w-full h-48 object-cover rounded-lg shadow-md"
+                className="w-full h-52 object-cover rounded-xl shadow-md border border-white/20"
               />
             </div>
 
-            <h2 className="text-2xl font-bold text-white mb-2 text-center">{product.name}</h2>
-            <p className="text-lg text-white text-center mb-2">PKR {product.price}</p>
-            <p className="text-white text-sm mb-6 text-center">{product.description}</p>
+            {/* Name and Price in Row */}
+            <div className="flex justify-between items-center mb-2 px-2">
+              <h2 className="text-xl font-bold">{product.name}</h2>
+              <p className="text-lg font-semibold text-yellow-300">PKR {product.price}</p>
+            </div>
 
-            <button
-              onClick={handleAddToCart}
-              className="w-full bg-green-600 text-white py-2 px-4 rounded-lg"
-            >
-              Add to Cart
-            </button>
+            {/* Description */}
+            <p className="text-sm text-gray-100 text-center mb-4 px-2">{product.description}</p>
+
+            {/* Quantity Selector */}
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <button
+                onClick={decreaseQty}
+                className="w-8 h-8 bg-white/20 text-white rounded-full text-lg font-bold hover:bg-white/30"
+              >
+                −
+              </button>
+              <span className="text-lg font-semibold">{quantity}</span>
+              <button
+                onClick={increaseQty}
+                className="w-8 h-8 bg-white/20 text-white rounded-full text-lg font-bold hover:bg-white/30"
+              >
+                +
+              </button>
+            </div>
+
+            {/* Add to Cart Button */}
+            {/* The product and quantity will only be added to the cart when the user clicks on this button */}
+            <Adtocart product={{ ...product, quantity }} />
           </div>
         </div>
       )}
