@@ -23,7 +23,6 @@ export default function FeaturedProduct() {
       <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">
         Featured Products
       </h1>
-
       {products.length === 0 ? (
         <p className="text-center text-gray-500">No featured products found.</p>
       ) : (

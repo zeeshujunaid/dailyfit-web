@@ -1,5 +1,7 @@
+import Ad from "../../../components/ad";
 import Categorysection from "../../../components/categorysection";
 import Feautredcard from "../../../components/Feautredcard";
+import Menscard from "../../../components/Menscard";
 import Navbar from "../../../components/Navbar";
 
 export default function HeroSection() {
@@ -25,6 +27,10 @@ export default function HeroSection() {
 
       <Categorysection />
       <Feautredcard/>
+      <Menscard/>
+      <Ad/>
+      <Menscard/>
+      <Menscard/>
     </div>
   );
 }
