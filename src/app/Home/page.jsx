@@ -1,8 +1,11 @@
+import Acceserioescard from "../../../components/Acceserioes";
 import Ad from "../../../components/ad";
 import Categorysection from "../../../components/categorysection";
 import Feautredcard from "../../../components/Feautredcard";
+import Kidscard from "../../../components/Kidscard";
 import Menscard from "../../../components/Menscard";
 import Navbar from "../../../components/Navbar";
+import Womenscard from "../../../components/womenscard";
 
 export default function HeroSection() {
   return (
@@ -29,8 +32,9 @@ export default function HeroSection() {
       <Feautredcard/>
       <Menscard/>
       <Ad/>
-      <Menscard/>
-      <Menscard/>
+      <Womenscard/>
+      <Kidscard/>
+      <Acceserioescard/>
     </div>
   );
 }

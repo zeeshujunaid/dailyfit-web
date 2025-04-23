@@ -3,6 +3,7 @@ export default function Ad() {
       <div
         className="relative h-60 w-full bg-cover bg-center rounded-xl overflow-hidden"
         style={{ backgroundImage: "url('/ad.png')" }}
+        id="about"
       >
         {/* Overlay */}
         <div className="absolute inset-0 bg-grey bg-opacity-40 flex flex-col items-center justify-center gap-8">
