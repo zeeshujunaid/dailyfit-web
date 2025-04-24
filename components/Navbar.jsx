@@ -1,17 +1,16 @@
 "use client";
-
-import { ShoppingCart } from "lucide-react";
-import { useRouter } from "next/navigation";
+ // Adjust the path as per your setup
+import Cartndlogin from "./cartndlogin";
 
 export default function Navbar() {
-  const router = useRouter();
-  // Smooth scroll to section by ID
+
   const scrollToSection = (id) => {
     const section = document.getElementById(id);
     if (section) {
       section.scrollIntoView({ behavior: "smooth" });
     }
   };
+
 
   return (
     <div className="flex justify-center px-4 z-10">
@@ -23,38 +22,14 @@ export default function Navbar() {
 
         {/* Navigation Links */}
         <div className="hidden md:flex space-x-8 text-gray-700 text-lg font-medium">
-          <button
-            onClick={() => scrollToSection("#")}
-            className="hover:text-red-500 transition"
-          >
-            Home
-          </button>
-          <button
-            onClick={() => scrollToSection("category")}
-            className="hover:text-red-500 transition"
-          >
-            Category
-          </button>
-          <button
-            onClick={() => scrollToSection("about")}
-            className="hover:text-red-500 transition"
-          >
-            About us
-          </button>
-          <button
-            onClick={() => scrollToSection("contact")}
-            className="hover:text-red-500 transition"
-          >
-            Contact us
-          </button>
+          <button onClick={() => scrollToSection("#")} className="hover:text-red-500 transition">Home</button>
+          <button onClick={() => scrollToSection("category")} className="hover:text-red-500 transition">Category</button>
+          <button onClick={() => scrollToSection("about")} className="hover:text-red-500 transition">About us</button>
+          <button onClick={() => scrollToSection("contact")} className="hover:text-red-500 transition">Contact us</button>
         </div>
 
-        {/* Cart Icon */}
-        <div className="flex space-x-8 items-center">
-          <button className="relative" onClick={()=>router.push("/Cart")}>
-            <ShoppingCart className="h-8 w-8 text-gray-700 hover:text-red-500" />
-          </button>
-        </div>
+        {/* Cart or Login Button */}
+        <Cartndlogin/>
       </nav>
     </div>
   );
