@@ -1,7 +1,5 @@
 "use client";
 
-import Navbar from "./Navbar";
-
 export default function Adtocart({ product }) {
   const handleAddToCart = () => {
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -23,7 +21,6 @@ export default function Adtocart({ product }) {
 
   return (
     <div className="flex justify-center items-center">
-      <Navbar/>
       <button
         onClick={handleAddToCart}
         className="bg-yellow-400 text-black py-2 px-6 rounded-lg font-semibold hover:bg-yellow-500 transition"
