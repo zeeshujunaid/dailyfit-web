@@ -25,7 +25,7 @@ export default function Navbar() {
           <button onClick={() => scrollToSection("/")} className="hover:text-red-500 transition">Home</button>
           <button onClick={() => scrollToSection("category")} className="hover:text-red-500 transition">Category</button>
           <button onClick={() => scrollToSection("about")} className="hover:text-red-500 transition">About us</button>
-          <button onClick={() => scrollToSection("contact")} className="hover:text-red-500 transition">Contact us</button>
+          <button onClick={() => scrollToSection("contact")} className="hover:text-red-500 transition">My Orders</button>
         </div>
 
         {/* Cart or Login Button */}
