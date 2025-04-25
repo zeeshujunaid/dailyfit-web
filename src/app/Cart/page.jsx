@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { db } from "../../../utils/firebase"; // apne firebase file ka path adjust karo
+import { collection, addDoc, } from "firebase/firestore";
+
 
 export default function Cart() {
   const [cartItems, setCartItems] = useState([]);
@@ -14,6 +17,43 @@ export default function Cart() {
   }, []);
 
   const totalPrice = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+
+  const Handlebill = async () => {
+    if (!cartItems.length) {
+      alert("Your cart is empty!");
+      return;
+    }
+
+    if (!cashOnDelivery) {
+      alert("Please select a payment method (Cash on Delivery).");
+      return;
+    }
+  
+    try {
+      await addDoc(collection(db, "orders"), {
+        items: cartItems.map(item => ({
+          name: item.name,
+          quantity: item.quantity,
+          price: item.price,
+          total: item.price * item.quantity,
+        })),
+        totalAmount: totalPrice,
+        paymentMethod: cashOnDelivery ? "Cash on Delivery" : "Not Selected",
+        status:"pending",
+        createdAt: Timestamp.now()
+      });
+  
+      // Success actions
+      alert("Order placed successfully!");
+      localStorage.removeItem("cart");
+      setCartItems([]);
+      router.push("/thankyou"); // You can change this route
+  
+    } catch (error) {
+      console.error("Error saving order: ", error);
+      alert("Failed to place order. Try again.");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
@@ -90,6 +130,7 @@ export default function Cart() {
             {/* Checkout Button */}
             <button
               className="w-full bg-blue-500 text-white py-2 rounded-lg font-semibold hover:bg-blue-600"
+              onClick={Handlebill}
             >
               Checkout
             </button>

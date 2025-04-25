@@ -65,6 +65,9 @@ export default function CartButton() {
         email: signupEmail,
       });
 
+      localStorage.setItem("userlogin", JSON.stringify(user.uid));
+
+
       toast.success("Signup successful!");
       setIsSignupModalOpen(false);
       router.push("/Cart");
