@@ -19,8 +19,8 @@ export default function ProductDetailsButton({ product }) {
     return () => document.body.classList.remove("overflow-hidden");
   }, [isModalOpen]);
 
-  const increaseQty = () => setQuantity(prev => prev + 1);
-  const decreaseQty = () => setQuantity(prev => (prev > 1 ? prev - 1 : 1));
+  const increaseQty = () => setQuantity((prev) => prev + 1);
+  const decreaseQty = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
   return (
     <>
@@ -34,7 +34,6 @@ export default function ProductDetailsButton({ product }) {
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm transition-all duration-300">
           <div className="relative bg-white/20 border border-white/30 backdrop-blur-2xl p-6 rounded-2xl w-[90%] max-w-md shadow-xl text-white">
-            
             {/* Close Button */}
             <button
               onClick={closeModal}
@@ -55,11 +54,15 @@ export default function ProductDetailsButton({ product }) {
             {/* Name and Price in Row */}
             <div className="flex justify-between items-center mb-2 px-2">
               <h2 className="text-xl font-bold">{product.name}</h2>
-              <p className="text-lg font-semibold text-yellow-300">PKR {product.price}</p>
+              <p className="text-lg font-semibold text-yellow-300">
+                PKR {product.price}
+              </p>
             </div>
 
             {/* Description */}
-            <p className="text-sm text-gray-100 text-center mb-4 px-2">{product.description}</p>
+            <p className="text-sm text-gray-100 text-center mb-4 px-2">
+              {product.description}
+            </p>
 
             {/* Quantity Selector */}
             <div className="flex items-center justify-center gap-4 mb-6">
@@ -80,7 +83,10 @@ export default function ProductDetailsButton({ product }) {
 
             {/* Add to Cart Button */}
             {/* The product and quantity will only be added to the cart when the user clicks on this button */}
-            <Adtocart product={{ ...product, quantity }} />
+            <Adtocart
+              product={{ ...product, quantity }}
+              onAddToCartSuccess={closeModal}
+            />
           </div>
         </div>
       )}

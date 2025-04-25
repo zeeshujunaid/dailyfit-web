@@ -22,7 +22,7 @@ export default function Navbar() {
 
         {/* Navigation Links */}
         <div className="hidden md:flex space-x-8 text-gray-700 text-lg font-medium">
-          <button onClick={() => scrollToSection("#")} className="hover:text-red-500 transition">Home</button>
+          <button onClick={() => scrollToSection("/")} className="hover:text-red-500 transition">Home</button>
           <button onClick={() => scrollToSection("category")} className="hover:text-red-500 transition">Category</button>
           <button onClick={() => scrollToSection("about")} className="hover:text-red-500 transition">About us</button>
           <button onClick={() => scrollToSection("contact")} className="hover:text-red-500 transition">Contact us</button>

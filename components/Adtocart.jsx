@@ -1,6 +1,8 @@
 "use client";
+import toast from "react-hot-toast";
 
-export default function Adtocart({ product }) {
+
+export default function Adtocart({ product,onAddToCartSuccess  }) {
   const handleAddToCart = () => {
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
@@ -9,11 +11,17 @@ export default function Adtocart({ product }) {
     if (existingIndex !== -1) {
       // Update the quantity if product already exists
       cart[existingIndex].quantity += product.quantity;
-      alert("Product quantity updated in the cart.");
+      if (onAddToCartSuccess) {
+        onAddToCartSuccess();
+      }
+      toast.success("Quantity Has Been Updated")
     } else {
       // Add new product
       cart.push(product);
-      alert("Item added to the cart successfully.");
+      if (onAddToCartSuccess) {
+        onAddToCartSuccess();
+      }
+      toast.success("Item added to the cart successfully.")
     }
 
     localStorage.setItem("cart", JSON.stringify(cart));
