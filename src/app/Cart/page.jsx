@@ -6,17 +6,34 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { db } from "../../../utils/firebase";
 import { doc, getDoc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
-import Navbar from "../../../components/Navbar";
+// import Navbar from "../../../components/Navbar"; // (You had it commented)
 
 export default function Cart() {
   const [cartItems, setCartItems] = useState([]);
+  const [uid, setUid] = useState(null);
   const [cashOnDelivery, setCashOnDelivery] = useState(false);
   const router = useRouter();
 
+  // Get the user ID
   useEffect(() => {
-    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-    setCartItems(storedCart);
+    const auth = getAuth();
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setUid(user.uid);
+      }
+    });
+
+    return () => unsubscribe();
   }, []);
+
+  // Fetch cart items after UID is available
+  useEffect(() => {
+    if (uid) {
+      const cartKey = `cart-${uid}`;
+      const storedCart = JSON.parse(localStorage.getItem(cartKey)) || [];
+      setCartItems(storedCart);
+    }
+  }, [uid]);
 
   const totalPrice = cartItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
@@ -33,10 +50,6 @@ export default function Cart() {
       toast.error("Please select a payment method");
       return;
     }
-
-    const auth = getAuth();
-    const user = auth.currentUser;
-    const uid = user?.uid;
 
     if (!uid) {
       toast.error("User not logged in");
@@ -72,7 +85,9 @@ export default function Cart() {
       }
 
       toast.success("Your Order Has Been Placed");
-      localStorage.removeItem("cart");
+
+      // Remove the correct cart after order placed
+      localStorage.removeItem(`cart-${uid}`);
       setCartItems([]);
       router.push("/Cart");
     } catch (error) {
@@ -81,13 +96,16 @@ export default function Cart() {
     }
   };
 
-
   const handleRemoveItem = (removeIndex) => {
-  const updatedCart = cartItems.filter((_, index) => index !== removeIndex);
-  setCartItems(updatedCart);
-  localStorage.setItem("cart", JSON.stringify(updatedCart));
-  toast.success("Item removed from cart");
-};
+    const updatedCart = cartItems.filter((_, index) => index !== removeIndex);
+    setCartItems(updatedCart);
+
+    if (uid) {
+      localStorage.setItem(`cart-${uid}`, JSON.stringify(updatedCart));
+    }
+
+    toast.success("Item removed from cart");
+  };
 
   return (
     <>
@@ -105,6 +123,7 @@ export default function Cart() {
               </button>
               Your Cart
             </h2>
+
             {cartItems.length === 0 ? (
               <div className="bg-white p-6 rounded-xl shadow text-gray-600 text-center">
                 Your cart is empty.

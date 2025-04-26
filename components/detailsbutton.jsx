@@ -2,10 +2,24 @@
 
 import { useEffect, useState } from "react";
 import Adtocart from "./Adtocart";
+import { getAuth } from "firebase/auth";
 
 export default function ProductDetailsButton({ product }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [uid, setUid] = useState(null);
   const [quantity, setQuantity] = useState(1);
+
+
+  useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setUid(user.uid);
+      }
+    });
+  
+    return () => unsubscribe();
+  }, []);
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -85,6 +99,7 @@ export default function ProductDetailsButton({ product }) {
             {/* The product and quantity will only be added to the cart when the user clicks on this button */}
             <Adtocart
               product={{ ...product, quantity }}
+              userId={uid}
               onAddToCartSuccess={closeModal}
             />
           </div>
