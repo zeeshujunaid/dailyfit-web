@@ -16,7 +16,7 @@ export default function MyOrders() {
   // Function to handle fetching orders from Firestore
   const handleMyOrders = async () => {
     if (!useruid) {
-      toast.error("User not logged in");
+      toast.error("Plz Login To See Your Orders Details");
       setLoading(false);
       return;
     }
@@ -68,6 +68,7 @@ export default function MyOrders() {
   if (orderData.length === 0) {
     return (
       <div className="text-center mt-10 text-lg font-semibold">
+        <Navbar/>
         No orders available
       </div>
     );

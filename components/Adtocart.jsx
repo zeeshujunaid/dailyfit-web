@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 export default function Adtocart({ product, onAddToCartSuccess, userId }) {
   const handleAddToCart = () => {
     if (!userId) {
-      toast.error("User not logged in");
+      toast.error("Plz Login To Add Product To The Cart");
       return;
     }
 
