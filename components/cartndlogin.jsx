@@ -43,6 +43,12 @@ export default function CartButton() {
     const auth = getAuth(app);
     try {
       await signInWithEmailAndPassword(auth, email, password);
+
+      const user = userCredential.user;
+      const uid = user.uid;
+
+      localStorage.setItem("useruid", JSON.stringify(uid));
+
       toast.success("Login successful!");
       setIsLoginModalOpen(false);
       router.push("/Cart");
@@ -55,7 +61,11 @@ export default function CartButton() {
     const auth = getAuth(app);
     const db = getFirestore(app);
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, signupEmail, signupPassword);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        signupEmail,
+        signupPassword
+      );
       const user = userCredential.user;
 
       // Save user data to Firestore
@@ -65,8 +75,7 @@ export default function CartButton() {
         email: signupEmail,
       });
 
-      localStorage.setItem("userlogin", JSON.stringify(user.uid));
-
+      localStorage.setItem("useruid", JSON.stringify(user.uid));
 
       toast.success("Signup successful!");
       setIsSignupModalOpen(false);
@@ -117,7 +126,9 @@ export default function CartButton() {
               ×
             </button>
             <div className="text-center mb-6">
-              <h2 className="text-3xl font-bold text-red-600">THE <span className="text-gray-800">DAILY</span> FIT</h2>
+              <h2 className="text-3xl font-bold text-red-600">
+                THE <span className="text-gray-800">DAILY</span> FIT
+              </h2>
               <p className="text-sm text-gray-500">Login to access your cart</p>
             </div>
             <div className="space-y-4">
@@ -176,7 +187,9 @@ export default function CartButton() {
               ×
             </button>
             <div className="text-center mb-6">
-              <h2 className="text-3xl font-bold text-red-600">Create Account</h2>
+              <h2 className="text-3xl font-bold text-red-600">
+                Create Account
+              </h2>
               <p className="text-sm text-gray-500">Join The Daily Fit</p>
             </div>
             <div className="space-y-4">
