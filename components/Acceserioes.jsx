@@ -6,18 +6,26 @@ import ProductDetailsButton from "./detailsbutton";
 export default function Acceserioescard(){
     const[products,setProducts]=useState([]);
 
-    useEffect(()=>{
-        const rawData = localStorage.getItem("acceseroies")
 
-        if(rawData){
-            try{
-                const parsed = JSON.parse(rawData)
-                setProducts(parsed)
-            }catch(error){
-                console.log(error)
-            }
+    useEffect(() => {
+      const rawData = localStorage.getItem("acceseroies");
+  
+      if (rawData) {
+        try {
+          const parsed = JSON.parse(rawData);
+  
+          // Random shuffle
+          const shuffled = parsed.sort(() => 0.5 - Math.random());
+  
+          // First 5 products
+          const selected = shuffled.slice(0, 5);
+  
+          setProducts(selected);
+        } catch (error) {
+          console.log(error);
         }
-    },[])
+      }
+    }, []);
 
     return (
         <div className="p-6">
