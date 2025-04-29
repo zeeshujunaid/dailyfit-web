@@ -10,31 +10,38 @@ import Womenscard from "../../../components/womenscard";
 export default function HeroSection() {
   return (
     <div className="flex flex-col">
+      {/* Hero Section */}
       <div
         className="min-h-screen bg-cover bg-center relative"
         style={{ backgroundImage: "url('/background.png')" }}
       >
         <Navbar />
 
-        {/* Main Content */}
-        <div className="flex items-center justify-start h-full px-50 relative z-10 pt-50">
-          {/* Left Side: Text */}
-          <div className="max-w-xl text-white">
-            <h1 className="text-7xl font-bold mb-6">Welcome To <span className="text-red-600">The</span><span className="text-white">Daily</span><span className="text-red-600">Fit</span></h1>
-            <p className="text-xl">
-            Level up your everyday look with Daily Fit — stylish tees and cool accessories for men, women, and kids. Whether you're keeping it casual or making a statement, we've got your vibe. Fashion that fits your lifestyle — only at Daily Fit
+        {/* Hero Text */}
+        <div className="flex items-center h-full px-6 md:px-16 pt-20 md:pt-32 relative z-10">
+          <div className="max-w-2xl text-white space-y-6">
+            <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold leading-tight">
+              Welcome To <span className="text-red-600">The</span>
+              <span className="text-white">Daily</span>
+              <span className="text-red-600">Fit</span>
+            </h1>
+            <p className="text-base md:text-lg lg:text-xl">
+              Level up your everyday look with Daily Fit — stylish tees and cool accessories for men, women, and kids. Whether you're keeping it casual or making a statement, we've got your vibe. Fashion that fits your lifestyle — only at Daily Fit
             </p>
           </div>
         </div>
       </div>
 
-      <Categorysection />
-      <Feautredcard/>
-      <Menscard/>
-      <Ad/>
-      <Womenscard/>
-      <Kidscard/>
-      <Acceserioescard/>
+      {/* Sections */}
+      <div className="px-4 md:px-8 lg:px-16 space-y-12 mt-12">
+        <Categorysection />
+        <Feautredcard />
+        <Menscard />
+        <Ad />
+        <Womenscard />
+        <Kidscard />
+        <Acceserioescard />
+      </div>
     </div>
   );
 }

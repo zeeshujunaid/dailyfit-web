@@ -13,32 +13,15 @@ export default function MyProfileAndOrders() {
   const [uid, setUid] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
 
-  useEffect(() => {
-    const auth = getAuth();
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        setUid(user.uid);
-        setUserInfo({
-          name: user.displayName || "User",
-          email: user.email,
-          photo: user.photoURL,
-        });
-      } else {
-        setUid(null);
-        setUserInfo(null);
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  const handleMyOrders = async () => {
+  // Fetch orders by UID
+  const handleMyOrders = async (userId) => {
     try {
-      const userDocRef = doc(db, "orders", uid);
+      const userDocRef = doc(db, "orders", userId);
       const userDocSnap = await getDoc(userDocRef);
 
       if (userDocSnap.exists()) {
         const data = userDocSnap.data();
+        console.log(data)
         const newOrders = Array.isArray(data.orders) ? data.orders : [];
 
         if (JSON.stringify(orderData) !== JSON.stringify(newOrders)) {
@@ -59,20 +42,38 @@ export default function MyProfileAndOrders() {
     }
   };
 
+  // Auth listener and load orders
   useEffect(() => {
-    if (uid) {
-      const ordersFromStorage = localStorage.getItem("myOrders");
+    const auth = getAuth();
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        const userId = user.uid;
+        console.log(userId)
+        setUid(userId);
+        setUserInfo({
+          name: user.displayName || "User",
+          email: user.email,
+          photo: user.photoURL,
+        });
 
-      if (ordersFromStorage) {
-        setOrderData(JSON.parse(ordersFromStorage));
-        setLoading(false);
+        const ordersFromStorage = localStorage.getItem("myOrders");
+        console.log(ordersFromStorage)
+        if (ordersFromStorage) {
+          setOrderData(JSON.parse(ordersFromStorage));
+          setLoading(false);
+        } else {
+          await handleMyOrders(userId);
+        }
       } else {
-        handleMyOrders();
+        console.log("User not logged in");
+        setUid(null);
+        setUserInfo(null);
+        setLoading(false);
       }
-    } else if (uid === null) {
-      setLoading(false);
-    }
-  }, [uid]);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">

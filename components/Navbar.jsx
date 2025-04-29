@@ -44,13 +44,13 @@ export default function Navbar() {
             Home
           </button>
           <button
-            onClick={() => scrollToSection("category")}
+            onClick={() => router.push("Home") ||  scrollToSection("category")}
             className="hover:text-red-500 transition"
           >
             Category
           </button>
           <button
-            onClick={() => scrollToSection("about")}
+            onClick={() => router.push("Home") || scrollToSection("about")}
             className="hover:text-red-500 transition"
           >
             About us
