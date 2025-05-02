@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { db } from "../../utils/firebase";
 
+
 export default function Loader() {
   const router = useRouter();
   const [error, setError] = useState(false);
