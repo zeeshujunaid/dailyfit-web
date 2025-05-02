@@ -1,5 +1,4 @@
 "use client";
-
 import { ShoppingCart } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -39,7 +38,7 @@ export default function CartButton() {
       });
 
       toast.success("Signed in successfully!");
-      router.push("/Cart"); // ya jis page pe bhejna ho
+      router.push("/Cart"); // Redirect to Cart or any other page
     } catch (error) {
       console.error("Google sign-in error:", error);
       toast.error("Google sign-in failed");
@@ -49,13 +48,16 @@ export default function CartButton() {
   return (
     <div className="flex space-x-6 items-center">
       {isLoggedIn ? (
-        <button className="relative" onClick={() => router.push("/Cart")}>
-          <ShoppingCart className="h-7 w-7 text-gray-800 hover:text-red-500 transition" />
+        <button
+          onClick={() => router.push("/Cart")}
+          className="relative group flex items-center justify-center p-2 rounded-full transition-all duration-300 transform hover:scale-110 focus:outline-none focus:ring-4 focus:ring-[#E4A4C6]"
+        >
+          <ShoppingCart className="h-8 w-8 text-gray-800 group-hover:text-red-500 transition duration-300" />
         </button>
       ) : (
         <button
           onClick={handleGoogleAuth}
-          className="bg-red-500 hover:bg-red-600 transition px-5 py-2 text-white rounded-lg text-sm font-semibold shadow-md"
+          className="bg-gradient-to-r from-[#E4A4C6] to-[#A77EB1] hover:from-[#A77EB1] hover:to-[#E4A4C6] transition-all duration-300 px-6 py-3 text-white text-sm font-semibold rounded-lg shadow-lg transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-[#E4A4C6]"
         >
           Sign In / Sign Up with Google
         </button>
