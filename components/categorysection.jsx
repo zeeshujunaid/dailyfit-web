@@ -1,8 +1,8 @@
 const categories = [
-  { name: "Men", image: "/mensbanner.webp" },
-  { name: "Women", image: "/womensbanner.webp" },
-  { name: "Kids", image: "/kidsbanner.jpeg" },
-  { name: "Accessories", image: "/acceseroies.jpg" },
+  { name: "See Mens Category", image: "/mensbanner.webp" },
+  { name: "See Women Category", image: "/womensbanner.webp" },
+  { name: "See Kids Category", image: "/kidsbanner.jpeg" },
+  { name: "See Accessories Category", image: "/acceseroies.jpg" },
 ];
 
 export default function CategorySection() {
@@ -25,8 +25,8 @@ export default function CategorySection() {
             />
 
             {/* Hover Overlay */}
-            <div className="absolute inset-0 bg-grey bg-opacity-70 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <span className="text-black text-2xl font-bold">{category.name}</span>
+            <div className="absolute inset-0 bg-grey bg-opacity-70 flex flex-col items-center text-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <span className="text-black text-2xl font-bold font-inline bg-gray-100">{category.name}</span>
             </div>
           </div>
         ))}

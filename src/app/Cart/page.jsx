@@ -5,12 +5,16 @@ import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { db } from "../../../utils/firebase";
+import Navbar from "../../../components/Navbar";
 import { doc, getDoc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
 // import Navbar from "../../../components/Navbar"; // (You had it commented)
 
 export default function Cart() {
   const [cartItems, setCartItems] = useState([]);
   const [uid, setUid] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [address, setAddress] = useState("");
+  const [phone, setPhone] = useState("");
   const [cashOnDelivery, setCashOnDelivery] = useState(false);
   const router = useRouter();
 
@@ -56,6 +60,11 @@ export default function Cart() {
       return;
     }
 
+    if (!address || !phone) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+
     const userOrdersRef = doc(db, "orders", uid);
 
     try {
@@ -71,6 +80,8 @@ export default function Cart() {
         totalAmount: totalPrice,
         paymentMethod: "Cash on Delivery",
         status: "pending",
+        address,
+        phone,
         createdAt: new Date(),
       };
 
@@ -85,11 +96,11 @@ export default function Cart() {
       }
 
       toast.success("Your Order Has Been Placed");
-
       // Remove the correct cart after order placed
       localStorage.removeItem(`cart-${uid}`);
       setCartItems([]);
-      router.push("/Cart");
+      setShowModal(false);
+      // router.push("/Cart");
     } catch (error) {
       console.error("Error saving order: ", error);
       toast.error("Something Went Wrong, Please Try Again Later.");
@@ -109,20 +120,14 @@ export default function Cart() {
 
   return (
     <>
-      {/* <Navbar /> */}
+      <div className="bg-gray-100">
+        <Navbar />
+      </div>
       <div className="min-h-screen bg-gray-100 py-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left - Cart Items */}
           <div className="lg:col-span-2 space-y-6">
-            <h2 className="text-3xl font-bold text-red-600">
-              <button
-                onClick={() => router.push("/")}
-                className="mb-6 bg-white text-red-800 px-2 py-1 rounded-lg font-medium"
-              >
-                ←
-              </button>
-              Your Cart
-            </h2>
+            <h2 className="text-3xl font-bold text-red-600">Your Cart</h2>
 
             {cartItems.length === 0 ? (
               <div className="bg-white p-6 rounded-xl shadow text-gray-600 text-center">
@@ -203,10 +208,55 @@ export default function Cart() {
             {/* Checkout Button */}
             <button
               className="w-full bg-red-600 text-white py-2 rounded-lg font-semibold hover:bg-red-700 transition"
-              onClick={Handlebill}
+              onClick={() => {
+                if (!cartItems.length) return toast.error("Cart is empty");
+                if (!cashOnDelivery)
+                  return toast.error("Select payment method");
+                setShowModal(true);
+              }}
             >
-              Checkout
+              Next
             </button>
+            {showModal && (
+              <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50">
+                <div className="bg-white p-6 rounded-lg w-full max-w-md space-y-4">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-bold">Enter Your Details</h3>
+                    <button
+                      className="text-red-600 font-bold"
+                      onClick={() => {
+                        setShowModal(false);
+                      }}
+                    >
+                      X
+                    </button>
+                  </div>
+
+                  <input
+                    type="text"
+                    placeholder="Address"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    className="w-full border p-2 rounded"
+                  />
+
+                  <input
+                    type="number"
+                    placeholder="Phone Number"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="w-full border p-2 rounded"
+                  />
+
+                  <button
+                    onClick={Handlebill}
+                    className="w-full bg-red-600 text-white py-2 rounded hover:bg-red-700"
+                  >
+                    Submit
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
