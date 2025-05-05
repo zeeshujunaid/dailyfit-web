@@ -40,7 +40,7 @@ export default function ProductDetailsButton({ product }) {
     <>
       <button
         onClick={handleOpenModal}
-        className="bg-red-500 text-white py-2 px-4 rounded-md shadow hover:bg-red-600 transition duration-300"
+        className=" text-black text-sm py-2 px-4 hover:bg-grey-100 transition duration-300"
       >
         View Details
       </button>

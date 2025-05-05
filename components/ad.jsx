@@ -1,7 +1,7 @@
 export default function Ad() {
     return (
       <div
-        className="relative h-60 w-full bg-cover bg-center rounded-xl overflow-hidden"
+        className="relative h-60 w-full bg-cover bg-center overflow-hidden"
         style={{ backgroundImage: "url('/ad.png')" }}
         id="about"
       >

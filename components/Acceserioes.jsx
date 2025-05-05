@@ -49,15 +49,16 @@ export default function Acceserioescard(){
                   />
     
                   {/* Product Info */}
-                  <div className="px-4 py-3 flex flex-col items-center space-y-2">
+                  <div className=" flex flex-col items-center space-y-2">
                     <h2 className="text-base font-semibold text-gray-800 text-center leading-tight">
-                      {product.name}
+                     {product.name}
                     </h2>
+                    <div className="flex flex-row justify-around items-center w-full">
                     <p className="text-green-600 text-sm font-medium">
                       PKR {product.price}
                     </p>
-    
                     <ProductDetailsButton product={product} />
+                    </div>
                   </div>
                 </div>
               ))}
