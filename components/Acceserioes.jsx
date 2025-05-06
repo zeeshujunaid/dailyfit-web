@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 import ProductDetailsButton from "./detailsbutton";
-
+import { useRouter } from "next/navigation";
 export default function Acceserioescard() {
   const [products, setProducts] = useState([]);
+  const Router = useRouter();
 
   useEffect(() => {
     const rawData = localStorage.getItem("acceseroies");
@@ -28,9 +29,13 @@ export default function Acceserioescard() {
 
   return (
     <div className="p-6">
+      <div className="flex flex-row items-center mb-2 w-full justify-between rounded-lg">
       <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">
-        Acceserioes
+        Acceseroies
       </h1>
+      <button onClick={()=>Router.push("Acceserioescategory")} className="text-ml text-gray-600 text-black-800 text-center mb-4">see more</button>
+
+      </div>
       {products.length === 0 ? (
         <p className="text-center text-gray-500">No Acceserioes found.</p>
       ) : (

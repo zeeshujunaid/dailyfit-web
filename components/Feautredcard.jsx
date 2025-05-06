@@ -20,9 +20,11 @@ export default function FeaturedProduct() {
 
   return (
     <div className="p-6">
+      <div className="flex flex-col items-center mb-4">
       <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">
         Featured Products
       </h1>
+      </div>
       {products.length === 0 ? (
         <p className="text-center text-gray-500">No featured products found.</p>
       ) : (

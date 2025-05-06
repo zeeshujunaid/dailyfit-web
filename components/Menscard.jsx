@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from "react";
 import ProductDetailsButton from "./detailsbutton";
+import {useRouter} from "next/navigation";
 
 export default function Menscard() {
   const [products, setProducts] = useState([]);
+  const Router = useRouter();
 
   useEffect(() => {
     const rawData = localStorage.getItem("mensproduct");
@@ -28,9 +30,17 @@ export default function Menscard() {
 
   return (
     <div className="p-6">
-      <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">
-        Mens Tshirts
-      </h1>
+      <div className="flex flex-row items-center mb-2 w-full justify-between rounded-lg">
+        <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">
+          Mens Tshirts
+        </h1>
+        <button
+          onClick={() => Router.push("Menscategory")}
+          className="text-ml text-gray-600 text-black-800 text-center mb-4"
+        >
+          see more
+        </button>
+      </div>
       {products.length === 0 ? (
         <p className="text-center text-gray-500">No Mens products found.</p>
       ) : (
