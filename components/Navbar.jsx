@@ -21,14 +21,14 @@ export default function Navbar() {
         
         {/* Logo */}
         <div
-          className="text-lg sm:text-2xl font-bold text-red-600 cursor-pointer"
+          className="text-base sm:text-xl md:text-2xl font-bold text-red-600 cursor-pointer"
           onClick={() => router.push("/Home")}
         >
           THE<span className="text-gray-800">DAILY</span>FIT
         </div>
 
         {/* Navigation Links */}
-        <div className="flex flex-wrap gap-x-4 sm:gap-x-8 text-xs sm:text-sm md:text-lg font-medium items-center text-gray-700">
+        <div className="hidden sm:flex gap-2 sm:gap-6 text-xs sm:text-sm font-medium items-center text-gray-700">
           <button
             onClick={() => router.push("/Home")}
             className="hover:text-red-500 transition"
