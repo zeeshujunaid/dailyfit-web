@@ -11,64 +11,30 @@ export default function Navbar() {
     const section = document.getElementById(id);
     if (section) {
       section.scrollIntoView({ behavior: "smooth" });
-      setIsDropdownOpen(false); // Close dropdown after click
+      setIsDropdownOpen(false);
     }
   };
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen((prev) => !prev);
-  };
-
   return (
-    <div className="flex justify-center px-4 z-10 relative">
-      <nav className="w-full max-w-7xl h-20 bg-white shadow-md rounded-2xl px-6 flex items-center justify-between">
+    <div className="flex justify-center px-2 sm:px-4 z-10 relative">
+      <nav className="w-full max-w-7xl h-16 sm:h-20 bg-white shadow-md rounded-2xl px-4 sm:px-6 flex items-center justify-between">
+        
         {/* Logo */}
-        <div className="text-2xl font-bold text-red-600 cursor-pointer">
+        <div
+          className="text-lg sm:text-2xl font-bold text-red-600 cursor-pointer"
+          onClick={() => router.push("/Home")}
+        >
           THE<span className="text-gray-800">DAILY</span>FIT
         </div>
 
         {/* Navigation Links */}
-        <div className="hidden md:flex space-x-8 text-gray-700 text-lg font-medium items-center relative">
+        <div className="flex flex-wrap gap-x-4 sm:gap-x-8 text-xs sm:text-sm md:text-lg font-medium items-center text-gray-700">
           <button
-            onClick={() => router.push("/")}
+            onClick={() => router.push("/Home")}
             className="hover:text-red-500 transition"
           >
             Home
           </button>
-
-          {/* Category with Dropdown */}
-          <div className="relative">
-            <button
-              onClick={toggleDropdown}
-              className="hover:text-red-500 transition"
-            >
-              Category
-            </button>
-
-            {isDropdownOpen && (
-              <div className="absolute top-full left-0 mt-2 bg-white shadow-lg rounded-lg py-2 w-40 z-50">
-                <button
-                  onClick={() => scrollToSection("category")}
-                  className="block px-4 py-2 text-black hover:bg-gray-100 w-full text-left"
-                >
-                  Category 1
-                </button>
-                <button
-                  onClick={() => scrollToSection("about")}
-                  className="block px-4 py-2 text-black hover:bg-gray-100 w-full text-left"
-                >
-                  Category 2
-                </button>
-                <button
-                  onClick={() => scrollToSection("contact")}
-                  className="block px-4 py-2 text-black hover:bg-gray-100 w-full text-left"
-                >
-                  Category 3
-                </button>
-              </div>
-            )}
-          </div>
-
           <button
             onClick={() => scrollToSection("about")}
             className="hover:text-red-500 transition"
@@ -84,7 +50,9 @@ export default function Navbar() {
         </div>
 
         {/* Cart or Login */}
-        <Cartndlogin />
+        <div className="scale-90 sm:scale-100">
+          <Cartndlogin />
+        </div>
       </nav>
     </div>
   );
