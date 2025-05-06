@@ -26,22 +26,22 @@ export default function FeaturedProduct() {
       {products.length === 0 ? (
         <p className="text-center text-gray-500">No featured products found.</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 justify-items-center">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6 justify-items-center">
           {products.map((product) => (
             <div
               key={product.id}
-              className="w-[220px] bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col overflow-hidden"
+              className="w-full max-w-[160px] sm:max-w-[180px] md:max-w-[200px] lg:max-w-[220px] bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col overflow-hidden"
             >
               {/* Product Image */}
               <img
                 src={product.image1}
                 alt={product.name}
-                className="w-full h-40 object-cover rounded-t-xl"
+                className="w-full h-36 object-cover rounded-t-xl"
               />
 
               {/* Product Info */}
-              <div className=" flex flex-col items-center space-y-2">
-                <h2 className="text-base font-semibold text-gray-800 text-center leading-tight">
+              <div className="flex flex-col items-center space-y-2 p-2">
+                <h2 className="text-sm font-semibold text-gray-800 text-center leading-tight">
                   {product.name}
                 </h2>
                 <div className="flex flex-row justify-around items-center w-full">
