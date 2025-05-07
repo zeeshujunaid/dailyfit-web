@@ -9,7 +9,7 @@ import Womenscard from "../../../components/womenscard";
 
 export default function HeroSection() {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col bg-[#f7f4f4]">
       {/* Hero Section */}
       <div
         className="relative bg-cover bg-center min-h-[60vh] sm:min-h-[70vh] md:min-h-screen"
