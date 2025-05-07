@@ -18,8 +18,6 @@ export default function Navbar() {
   return (
     <div className="flex justify-center px-2 sm:px-4 z-10 relative">
       <nav className="w-full max-w-7xl h-16 sm:h-20 bg-white shadow-md rounded-2xl px-4 sm:px-6 flex items-center justify-between">
-        
-        {/* Logo */}
         <div
           className="text-base sm:text-xl md:text-2xl font-bold text-red-600 cursor-pointer"
           onClick={() => router.push("/Home")}
