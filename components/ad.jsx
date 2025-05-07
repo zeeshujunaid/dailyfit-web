@@ -11,7 +11,7 @@ export default function Ad() {
             <span className="text-red-600">The</span> Daily <span className="text-red-600">Fit</span>
           </h1>
           <h5 className="text-white text-xl md:text-4xl font-bold text-center px-4">
-            We Dont Compromise On Our Quality And Pricing
+            Dont Compromise On Quality And Style
           </h5>
         </div>
       </div>
