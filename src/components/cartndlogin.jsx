@@ -4,7 +4,7 @@ import { ShoppingCart } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
-import { app } from "../utils/firebase";
+import { app } from "../../utils/firebase";
 import toast from "react-hot-toast";
 
 export default function CartButton() {

@@ -5,9 +5,8 @@ import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { db } from "../../../utils/firebase";
-import Navbar from "../../../components/Navbar";
+import Navbar from "../../components/Navbar";
 import { doc, getDoc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
-// import Navbar from "../../../components/Navbar"; // (You had it commented)
 
 export default function Cart() {
   const [cartItems, setCartItems] = useState([]);
@@ -15,6 +14,10 @@ export default function Cart() {
   const [showModal, setShowModal] = useState(false);
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
+  const [street, setStreet] = useState("");
+  const [houseNumber, setHouseNumber] = useState("");
+  const [city, setCity] = useState("");
+  const [postalCode, setPostalCode] = useState("");
   const [cashOnDelivery, setCashOnDelivery] = useState(false);
   const router = useRouter();
 
@@ -60,10 +63,12 @@ export default function Cart() {
       return;
     }
 
-    if (!address || !phone) {
-      toast.error("Please fill in all fields");
-      return;
-    }
+    if (!address || !street || !houseNumber || !city || !postalCode || !phone) {
+  toast.error("Please fill in all fields");
+  return;
+}
+
+const fullAddress = `${houseNumber}, ${street}, ${city}, ${postalCode}`;
 
     const userOrdersRef = doc(db, "orders", uid);
 
@@ -80,7 +85,7 @@ export default function Cart() {
         totalAmount: totalPrice,
         paymentMethod: "Cash on Delivery",
         status: "pending",
-        address,
+        address: fullAddress,
         phone,
         createdAt: new Date(),
       };
@@ -232,6 +237,7 @@ export default function Cart() {
                     </button>
                   </div>
 
+                  {/* Original Address Input */}
                   <input
                     type="text"
                     placeholder="Address"
@@ -240,6 +246,40 @@ export default function Cart() {
                     className="w-full border p-2 rounded"
                   />
 
+                  {/* New Structured Address Inputs */}
+                  <input
+                    type="text"
+                    placeholder="Street"
+                    value={street}
+                    onChange={(e) => setStreet(e.target.value)}
+                    className="w-full border p-2 rounded"
+                  />
+
+                  <input
+                    type="text"
+                    placeholder="House/Flat No."
+                    value={houseNumber}
+                    onChange={(e) => setHouseNumber(e.target.value)}
+                    className="w-full border p-2 rounded"
+                  />
+
+                  <input
+                    type="text"
+                    placeholder="City"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                    className="w-full border p-2 rounded"
+                  />
+
+                  <input
+                    type="text"
+                    placeholder="Postal Code"
+                    value={postalCode}
+                    onChange={(e) => setPostalCode(e.target.value)}
+                    className="w-full border p-2 rounded"
+                  />
+
+                  {/* Original Phone Input */}
                   <input
                     type="number"
                     placeholder="Phone Number"

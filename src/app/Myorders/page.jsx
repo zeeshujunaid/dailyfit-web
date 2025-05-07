@@ -5,7 +5,7 @@ import { doc, onSnapshot } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import Navbar from "../../../components/Navbar";
+import Navbar from "../../components/Navbar";
 
 export default function MyProfileAndOrders() {
   const [orderData, setOrderData] = useState([]);
