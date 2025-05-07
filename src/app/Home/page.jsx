@@ -37,13 +37,13 @@ export default function HeroSection() {
           </div>
         </div>
       </div>
-
-      {/* Sections */}
       <div className="px-4 sm:px-6 md:px-10 lg:px-16 space-y-12 mt-12">
         <Categorysection />
         <Feautredcard />
         <Menscard />
-        <Ad />
+      </div>
+      <Ad />
+      <div className="px-4 sm:px-6 md:px-10 lg:px-16 space-y-12">
         <Womenscard />
         <Kidscard />
         <Acceserioescard />
