@@ -14,7 +14,11 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: "THE DAILY FIT",
-  description: "A website for your dily outfit",
+  description: "A website for your dily outfit needs",
+  keywords: "fashion, outfit, daily, clothing, style",
+  authors: [{ name: "The Daily Fit" }],
+  creator: "Zeeshan Juanid",
+  publisher: "The Daily Fit",
   icons: {
     icon: "logo.png",
     shortcut: "logo.png",
