@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Navbar from "@/components/navbar";
-import ProductDetailsButton from "@/components/detailsbutton";
+import Navbar from "../../components/Navbar";
+import ProductDetailsButton from "../../components/detailsbutton";
 import { useRouter } from "next/navigation";
 
 export default function Acceseroiescard() {
