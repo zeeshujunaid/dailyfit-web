@@ -1,16 +1,19 @@
 "use client";
 
 import { db } from "../../../utils/firebase";
-import { doc, onSnapshot } from "firebase/firestore";
+import { doc, onSnapshot, deleteDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Navbar from "../../components/Navbar";
+import { useRouter } from "next/navigation";
 
 export default function MyProfileAndOrders() {
   const [orderData, setOrderData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [uid, setUid] = useState(null);
+  const router = useRouter();
 
   // Listen to orders in real-time
   const listenToOrders = (userId) => {
@@ -66,6 +69,32 @@ export default function MyProfileAndOrders() {
     return () => unsubscribeAuth();
   }, []);
 
+  const handleDelete = async (orderId) => {
+    console.log("Deleting order with ID:", orderId);
+    setIsDeleting(true); // Show loader
+
+    try {
+      const orderDocRef = doc(db, "orders", orderId);
+      await deleteDoc(orderDocRef);
+
+      // Update state and localStorage
+      setOrderData((prevOrders) => {
+        if (!Array.isArray(prevOrders)) return [];
+        const updatedOrders = prevOrders.filter(
+          (order) => order.id !== orderId
+        );
+        return updatedOrders;
+      });
+
+      toast.success("Order has been deleted.");
+    } catch (error) {
+      console.error("Error deleting order: ", error);
+      toast.error("Failed to delete order.");
+    } finally {
+      setIsDeleting(false); // Hide loader
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
       <Navbar />
@@ -102,11 +131,27 @@ export default function MyProfileAndOrders() {
                           </span>
                         </div>
                       )}
-                      {order.status === "deleted" && (
-                        <span className="bg-red-100 text-red-700 text-xs font-semibold px-2 py-1 rounded-full">
-                          Deleted
-                        </span>
+                      {order.status === "cancelled" && (
+                        <div className="flex items-center gap-2">
+                          <span className="bg-red-100 text-red-700 text-xs font-semibold px-2 py-1 rounded-full">
+                            Order has been cancelled by admin
+                          </span>
+
+                          {isDeleting ? (
+                            <span className="text-xs text-gray-500">
+                              Deleting...
+                            </span>
+                          ) : (
+                            <button
+                              onClick={() => handleDelete(order.orderId)}
+                              className="bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded-full hover:bg-red-700"
+                            >
+                              Delete Order
+                            </button>
+                          )}
+                        </div>
                       )}
+
                       {order.status === "delivered" && (
                         <span className="bg-blue-100 text-blue-700 text-xs font-semibold px-2 py-1 rounded-full">
                           Delivered
