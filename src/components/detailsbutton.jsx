@@ -58,19 +58,18 @@ export default function ProductDetailsButton({ product }) {
               ×
             </button>
 
-            <div className="flex">
-              {/* Product Image on the Left */}
-              <div className="w-1/2 pr-4">
+            <div className="flex flex-col md:flex-row gap-6">
+              {/* Product Image */}
+              <div className="w-full md:w-1/2">
                 <img
                   src={product.image1}
                   alt={product.name}
-                  className="w-full h-96 object-cover rounded-lg shadow-xl border-4 border-white/30"
+                  className="w-full h-64 md:h-96 object-cover rounded-lg shadow-xl border-4 border-white/30"
                 />
               </div>
 
-              {/* Product Details on the Right */}
-              <div className="w-1/2 pl-4 flex flex-col justify-around">
-                {/* Product Name, Price, and Description */}
+              {/* Product Details */}
+              <div className="w-full md:w-1/2 flex flex-col justify-between gap-4">
                 <div className="flex flex-col gap-2 text-gray-900">
                   <div>
                     <h2 className="text-xl font-semibold">Product Name:</h2>
@@ -93,7 +92,7 @@ export default function ProductDetailsButton({ product }) {
                 </div>
 
                 {/* Quantity Controls */}
-                <div className="flex flex-col gap-2 mb-4">
+                <div className="flex flex-col gap-2">
                   <span className="text-lg font-semibold text-gray-900">
                     Quantity:
                   </span>
@@ -116,22 +115,13 @@ export default function ProductDetailsButton({ product }) {
                   </div>
                 </div>
 
-                {/* Add to Cart & Add to Wishlist buttons */}
-                <div className="flex gap-4 mb-4">
-                  {/* Add to Wishlist - Fixed width */}
-                  <button className="w-30 h-12 py-3 text-center bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-xl font-semibold text-lg hover:from-orange-500 hover:to-yellow-500 transition-all duration-300">
-                    Wishlist
-                  </button>
-
-                  {/* Add to Cart - Full Width */}
-                  <Adtocart
-                    product={{ ...product, quantity }}
-                    userId={uid}
-                    onAddToCartSuccess={closeModal}
-                    className="flex-grow py-3 text-center bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-xl font-semibold text-lg hover:from-teal-500 hover:to-green-500 transition-all duration-300"
-                  />
-
-                </div>
+                {/* Add to Cart Button */}
+                <Adtocart
+                  product={{ ...product, quantity }}
+                  userId={uid}
+                  onAddToCartSuccess={closeModal}
+                  className="py-3 text-center bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-xl font-semibold text-lg hover:from-teal-500 hover:to-green-500 transition-all duration-300"
+                />
               </div>
             </div>
           </div>

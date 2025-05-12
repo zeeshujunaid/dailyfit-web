@@ -1,12 +1,13 @@
 "use client";
 
 import { db } from "../../../utils/firebase";
-import { doc, onSnapshot, deleteDoc } from "firebase/firestore";
+import { doc, onSnapshot } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Navbar from "../../components/Navbar";
 import { useRouter } from "next/navigation";
+import { getDoc, updateDoc } from "firebase/firestore";
 
 export default function MyProfileAndOrders() {
   const [orderData, setOrderData] = useState([]);
@@ -69,31 +70,29 @@ export default function MyProfileAndOrders() {
     return () => unsubscribeAuth();
   }, []);
 
-  const handleDelete = async (orderId) => {
-    console.log("Deleting order with ID:", orderId);
-    setIsDeleting(true); // Show loader
-
+  
+  const handleDelete = async (orderId, uid) => {
     try {
-      const orderDocRef = doc(db, "orders", orderId);
-      await deleteDoc(orderDocRef);
-
-      // Update state and localStorage
-      setOrderData((prevOrders) => {
-        if (!Array.isArray(prevOrders)) return [];
-        const updatedOrders = prevOrders.filter(
-          (order) => order.id !== orderId
+      const orderDocRef = doc(db, 'orders', uid);
+      const orderDocSnap = await getDoc(orderDocRef);
+  
+      if (orderDocSnap.exists()) {
+        const existingOrders = orderDocSnap.data().orders || [];
+        const updatedOrders = existingOrders.filter(
+          (order) => order.orderId !== orderId // <-- use orderId here
         );
-        return updatedOrders;
-      });
-
-      toast.success("Order has been deleted.");
+  
+        await updateDoc(orderDocRef, { orders: updatedOrders });
+        toast.success('Order deleted successfully');
+      } else {
+        toast.error('Order document does not exist');
+      }
     } catch (error) {
-      console.error("Error deleting order: ", error);
-      toast.error("Failed to delete order.");
-    } finally {
-      setIsDeleting(false); // Hide loader
+      console.error('Error deleting order:', error);
+      toast.error('Failed to delete order');
     }
   };
+  
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
@@ -143,7 +142,7 @@ export default function MyProfileAndOrders() {
                             </span>
                           ) : (
                             <button
-                              onClick={() => handleDelete(order.orderId)}
+                            onClick={() => handleDelete(order.orderId, uid)}
                               className="bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded-full hover:bg-red-700"
                             >
                               Delete Order
