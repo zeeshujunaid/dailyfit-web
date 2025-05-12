@@ -82,8 +82,8 @@ export default function Loader() {
           </>
         ) : (
           <p className="text-xl font-semibold text-red-600 text-center">
-            😔 HEY PLZ CHECK YOUR AND<br />
-                TRY AGAIN LATER.
+            😔 HEY PLZ CHECK YOUR CONNECTION <br />
+            AND TRY AGAIN LATER.
           </p>
         )}
       </div>
