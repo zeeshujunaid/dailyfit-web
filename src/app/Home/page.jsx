@@ -17,7 +17,7 @@ export default function HeroSection() {
         className="relative bg-cover bg-center min-h-[60vh] sm:min-h-[80vh] md:min-h-screen"
         style={{
           backgroundImage:
-            "url('https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?auto=format&fit=crop&w=1350&q=80')",
+            "url('https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
         }}
       >
         {/* Overlay */}

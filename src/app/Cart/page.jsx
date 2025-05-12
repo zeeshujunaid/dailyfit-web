@@ -227,70 +227,76 @@ export default function Cart() {
               Next
             </button>
             {showModal && (
-              <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50">
-                <div className="bg-white p-6 rounded-lg w-full max-w-md space-y-4">
-                  <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-lg font-bold">Enter Your Details</h3>
+              <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50">
+                <div className="bg-white rounded-xl shadow-xl w-full max-w-lg p-6 space-y-6">
+                  {/* Modal Header */}
+                  <div className="flex justify-between items-center border-b pb-3">
+                    <h3 className="text-xl font-semibold text-gray-800">
+                      Shipping Details
+                    </h3>
                     <button
-                      className="text-red-600 font-bold"
-                      onClick={() => {
-                        setShowModal(false);
-                      }}
+                      onClick={() => setShowModal(false)}
+                      className="text-red-500 hover:text-red-700 text-lg font-bold"
                     >
-                      X
+                      &times;
                     </button>
                   </div>
 
-                  {/* Address and Phone Inputs */}
-                  <input
-                    type="text"
-                    placeholder="Address"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                    className="w-full border p-2 rounded"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Street"
-                    value={street}
-                    onChange={(e) => setStreet(e.target.value)}
-                    className="w-full border p-2 rounded"
-                  />
-                  <input
-                    type="text"
-                    placeholder="House/Flat No."
-                    value={houseNumber}
-                    onChange={(e) => setHouseNumber(e.target.value)}
-                    className="w-full border p-2 rounded"
-                  />
-                  <input
-                    type="text"
-                    placeholder="City"
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                    className="w-full border p-2 rounded"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Postal Code"
-                    value={postalCode}
-                    onChange={(e) => setPostalCode(e.target.value)}
-                    className="w-full border p-2 rounded"
-                  />
-                  <input
-                    type="number"
-                    placeholder="Phone Number"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    className="w-full border p-2 rounded"
-                  />
+                  {/* Form Inputs */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <input
+                      type="text"
+                      placeholder="Address"
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                      className="border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-400"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Street"
+                      value={street}
+                      onChange={(e) => setStreet(e.target.value)}
+                      className="border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-400"
+                    />
+                    <input
+                      type="text"
+                      placeholder="House/Flat No."
+                      value={houseNumber}
+                      onChange={(e) => setHouseNumber(e.target.value)}
+                      className="border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-400"
+                    />
+                    <input
+                      type="text"
+                      placeholder="City"
+                      value={city}
+                      onChange={(e) => setCity(e.target.value)}
+                      className="border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-400"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Postal Code"
+                      value={postalCode}
+                      onChange={(e) => setPostalCode(e.target.value)}
+                      className="border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-400"
+                    />
+                    <input
+                      type="number"
+                      placeholder="Phone Number"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      className="border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-400"
+                    />
+                  </div>
 
-                  <button
-                    onClick={Handlebill}
-                    className="w-full bg-red-600 text-white py-2 rounded hover:bg-red-700"
-                  >
-                    Submit
-                  </button>
+                  {/* Submit Button */}
+                  <div>
+                    <button
+                      onClick={Handlebill}
+                      className="w-full bg-red-600 text-white py-3 rounded-md font-medium hover:bg-red-700 transition"
+                    >
+                      Submit
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
