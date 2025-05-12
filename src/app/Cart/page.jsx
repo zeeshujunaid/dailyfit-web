@@ -1,5 +1,3 @@
-"use client";
-
 import toast from "react-hot-toast";
 import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
@@ -7,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { db } from "../../../utils/firebase";
 import Navbar from "../../components/Navbar";
 import { doc, getDoc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
+import { v4 as uuidv4 } from "uuid"; // Importing uuid for unique order ID
 
 export default function Cart() {
   const [cartItems, setCartItems] = useState([]);
@@ -64,18 +63,22 @@ export default function Cart() {
     }
 
     if (!address || !street || !houseNumber || !city || !postalCode || !phone) {
-  toast.error("Please fill in all fields");
-  return;
-}
+      toast.error("Please fill in all fields");
+      return;
+    }
 
-const fullAddress = `${houseNumber}, ${street}, ${city}, ${postalCode}`;
+    const fullAddress = `${houseNumber}, ${street}, ${city}, ${postalCode}`;
 
     const userOrdersRef = doc(db, "orders", uid);
 
     try {
       const docSnap = await getDoc(userOrdersRef);
 
+      // Generate a unique order ID
+      const orderId = uuidv4(); // Unique order ID for each order
+
       const newOrder = {
+        orderId, // Add orderId to the order
         items: cartItems.map((item) => ({
           name: item.name,
           quantity: item.quantity,
@@ -105,7 +108,6 @@ const fullAddress = `${houseNumber}, ${street}, ${city}, ${postalCode}`;
       localStorage.removeItem(`cart-${uid}`);
       setCartItems([]);
       setShowModal(false);
-      // router.push("/Cart");
     } catch (error) {
       console.error("Error saving order: ", error);
       toast.error("Something Went Wrong, Please Try Again Later.");
@@ -237,7 +239,7 @@ const fullAddress = `${houseNumber}, ${street}, ${city}, ${postalCode}`;
                     </button>
                   </div>
 
-                  {/* Original Address Input */}
+                  {/* Address and Phone Inputs */}
                   <input
                     type="text"
                     placeholder="Address"
@@ -245,8 +247,6 @@ const fullAddress = `${houseNumber}, ${street}, ${city}, ${postalCode}`;
                     onChange={(e) => setAddress(e.target.value)}
                     className="w-full border p-2 rounded"
                   />
-
-                  {/* New Structured Address Inputs */}
                   <input
                     type="text"
                     placeholder="Street"
@@ -254,7 +254,6 @@ const fullAddress = `${houseNumber}, ${street}, ${city}, ${postalCode}`;
                     onChange={(e) => setStreet(e.target.value)}
                     className="w-full border p-2 rounded"
                   />
-
                   <input
                     type="text"
                     placeholder="House/Flat No."
@@ -262,7 +261,6 @@ const fullAddress = `${houseNumber}, ${street}, ${city}, ${postalCode}`;
                     onChange={(e) => setHouseNumber(e.target.value)}
                     className="w-full border p-2 rounded"
                   />
-
                   <input
                     type="text"
                     placeholder="City"
@@ -270,7 +268,6 @@ const fullAddress = `${houseNumber}, ${street}, ${city}, ${postalCode}`;
                     onChange={(e) => setCity(e.target.value)}
                     className="w-full border p-2 rounded"
                   />
-
                   <input
                     type="text"
                     placeholder="Postal Code"
@@ -278,8 +275,6 @@ const fullAddress = `${houseNumber}, ${street}, ${city}, ${postalCode}`;
                     onChange={(e) => setPostalCode(e.target.value)}
                     className="w-full border p-2 rounded"
                   />
-
-                  {/* Original Phone Input */}
                   <input
                     type="number"
                     placeholder="Phone Number"
