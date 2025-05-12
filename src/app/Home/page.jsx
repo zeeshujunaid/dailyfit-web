@@ -1,3 +1,5 @@
+"use client";
+
 import Acceserioescard from "../../components/Acceserioes";
 import Ad from "../../components/ad";
 import Categorysection from "../../components/categorysection";

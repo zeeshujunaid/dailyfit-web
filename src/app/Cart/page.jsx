@@ -1,3 +1,5 @@
+"use client";
+
 import toast from "react-hot-toast";
 import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
