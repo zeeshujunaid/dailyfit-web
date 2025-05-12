@@ -72,12 +72,16 @@ export default function MyProfileAndOrders() {
 
       {/* Orders Section */}
       <div className="flex-1 mt-8 px-4">
-        <h1 className="text-2xl font-bold mb-4 text-gray-800 text-center">My Orders</h1>
+        <h1 className="text-2xl font-bold mb-4 text-gray-800 text-center">
+          My Orders
+        </h1>
 
         {loading ? (
           <div className="text-center text-lg font-semibold">Loading...</div>
         ) : orderData.length === 0 ? (
-          <div className="text-center text-lg font-semibold">No orders available</div>
+          <div className="text-center text-lg font-semibold">
+            No orders available
+          </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {orderData.map((order, index) => (
@@ -91,10 +95,12 @@ export default function MyProfileAndOrders() {
                     <div className="font-semibold text-gray-700">Status:</div>
                     <div className="capitalize flex items-center gap-2">
                       {order.status}
-                      {order.status === "delivering" && (
-                        <span className="bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded-full">
-                          Delivering
-                        </span>
+                      {order.status === "delivering" && order.deliveryDate && (
+                        <div className="flex items-center gap-2">
+                          <span className="bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded-full">
+                            Delivery Date {order.deliveryDate}
+                          </span>
+                        </div>
                       )}
                       {order.status === "deleted" && (
                         <span className="bg-red-100 text-red-700 text-xs font-semibold px-2 py-1 rounded-full">
@@ -111,22 +117,32 @@ export default function MyProfileAndOrders() {
 
                   {/* Payment Method */}
                   <div className="flex justify-between">
-                    <div className="font-semibold text-gray-700">Payment Method:</div>
+                    <div className="font-semibold text-gray-700">
+                      Payment Method:
+                    </div>
                     <div>{order.paymentMethod}</div>
                   </div>
 
                   {/* Total Amount */}
                   <div className="flex justify-between">
-                    <div className="font-semibold text-gray-700">Total Amount:</div>
-                    <div className="text-green-600 font-bold">${order.totalAmount}</div>
+                    <div className="font-semibold text-gray-700">
+                      Total Amount:
+                    </div>
+                    <div className="text-green-600 font-bold">
+                      ${order.totalAmount}
+                    </div>
                   </div>
 
                   {/* Created At */}
                   {order.createdAt?.seconds && (
                     <div className="flex justify-between">
-                      <div className="font-semibold text-gray-700">Ordered On:</div>
+                      <div className="font-semibold text-gray-700">
+                        Ordered On:
+                      </div>
                       <div>
-                        {new Date(order.createdAt.seconds * 1000).toLocaleDateString()}
+                        {new Date(
+                          order.createdAt.seconds * 1000
+                        ).toLocaleDateString()}
                       </div>
                     </div>
                   )}
@@ -134,7 +150,9 @@ export default function MyProfileAndOrders() {
                   {/* Items List */}
                   {Array.isArray(order.items) && order.items.length > 0 && (
                     <div className="mt-4">
-                      <div className="font-semibold mb-2 text-gray-800">Items:</div>
+                      <div className="font-semibold mb-2 text-gray-800">
+                        Items:
+                      </div>
                       <ul className="list-disc list-inside space-y-1">
                         {order.items.map((item, idx) => (
                           <li key={idx} className="text-gray-700">
@@ -146,16 +164,19 @@ export default function MyProfileAndOrders() {
                   )}
 
                   {/* Delivery Date */}
-                  {order.status === "delivering" && order.deliveryDate?.seconds && (
-                    <div className="mt-4">
-                      <div className="font-semibold text-green-600 mb-1">
-                        DeliveryDate:
+                  {order.status === "delivering" &&
+                    order.deliveryDate?.seconds && (
+                      <div className="mt-4">
+                        <div className="font-semibold text-green-600 mb-1">
+                          DeliveryDate:
+                        </div>
+                        <div className="text-gray-700">
+                          {new Date(
+                            order.deliveryDate.seconds * 1000
+                          ).toLocaleDateString()}
+                        </div>
                       </div>
-                      <div className="text-gray-700">
-                        {new Date(order.deliveryDate.seconds * 1000).toLocaleDateString()}
-                      </div>
-                    </div>
-                  )}
+                    )}
                 </div>
               </div>
             ))}
