@@ -60,53 +60,59 @@ export default function FeaturedProduct() {
               {products.slice(0, visibleCount).map((product) => (
                 <div
                   key={product.id}
-                  className="group relative bg-white rounded-3xl border border-gray-200 shadow-md hover:shadow-xl transition-all duration-300"
+                  className="relative bg-white rounded-3xl border border-gray-200 shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden"
                 >
-                  {/* Badge */}
-                  <div className="absolute top-3 left-3 z-10">
-                    <span className="bg-yellow-400 text-black text-xs font-semibold px-3 py-1 rounded-full shadow">
+                  {/* Featured Badge */}
+                  <div className="absolute top-4 left-4 z-10">
+                    <span className="bg-gradient-to-r from-yellow-300 via-yellow-400 to-amber-500 text-black text-xs font-bold px-3 py-1 rounded-full shadow">
                       ⭐ Featured
                     </span>
                   </div>
 
+                  {/* Wishlist */}
+                  <button className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-white flex items-center justify-center shadow-md hover:bg-red-500 hover:text-white transition-colors duration-300">
+                    ❤
+                  </button>
+
                   {/* Image */}
-                  <div className="overflow-hidden rounded-t-3xl bg-gray-100">
+                  <div className="bg-gray-100 rounded-t-3xl">
                     <img
                       src={product.image1}
                       alt={product.name}
-                      className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-500"
+                      className="w-full h-60 object-cover"
                     />
                   </div>
 
                   {/* Details */}
-                  <div className="p-4">
-                    <div className="flex flex-col justify-around">
-                      <h3 className="text-lg font-bold font-mono text-gray-800 line-clamp-2">
-                        {product.name}
-                      </h3>
+                  <div className="p-5">
+                    <h3 className="text-lg font-bold text-gray-900 line-clamp-2 min-h-[56px]">
+                      {product.name}
+                    </h3>
 
-                      <p className="text-sm text-gray-500 mt-2 line-clamp-2 min-h-[40px]">
-                        {product.description ||
-                          "Premium quality product crafted for style and comfort."}
-                      </p>
+                    <p className="mt-2 text-sm text-gray-500 line-clamp-2 min-h-[42px]">
+                      {product.description ||
+                        "Premium quality product crafted for style and comfort."}
+                    </p>
+
+                    {/* Price + Stock */}
+                    <div className="flex items-center justify-between mt-5">
+                      <div>
+                        <h4 className="text-2xl font-bold text-gray-900">
+                          <span className="text-yellow-500 text-lg">PKR </span>
+                          {product.price}
+                        </h4>
+                      </div>
+
+                      <span className="bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full border border-green-200">
+                        ● In Stock
+                      </span>
                     </div>
 
-                    <div className="flex items-center justify-between mt-4">
-                      <span className="text-xl font-semibold text-gray-900 gap-2 flex items-center">
-                        <span className="text-gray-900">
-                          PKR
-                          </span>{product.price}
-                      </span>
-
-                      <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
-                        In Stock
-                      </span>
-                    </div>
+                    {/* Divider */}
+                    <div className="border-t border-gray-100 my-5"></div>
 
                     {/* Existing Modal Button */}
-                    <div className="mt-4">
-                      <ProductDetailsButton product={product} />
-                    </div>
+                    <ProductDetailsButton product={product} />
                   </div>
                 </div>
               ))}

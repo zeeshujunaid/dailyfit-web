@@ -30,7 +30,7 @@ export default function CategorySection() {
   const router = useRouter();
 
   const handleCategoryClick = (route) => {
-    toast.success(`Loading ${route}`);
+    toast.success("Loading...");
     router.push(route);
   };
 

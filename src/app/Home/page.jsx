@@ -1,13 +1,8 @@
 "use client";
 
-import Acceserioescard from "../../components/Acceserioes";
-import Ad from "../../components/ad";
 import Categorysection from "../../components/categorysection";
 import Feautredcard from "../../components/Feautredcard";
-import Kidscard from "../../components/Kidscard";
-import Menscard from "../../components/Menscard";
 import Navbar from "../../components/Navbar";
-import Womenscard from "../../components/womenscard";
 
 export default function HeroSection() {
   return (
@@ -54,23 +49,8 @@ export default function HeroSection() {
       {/* Page Content */}
       <div className="px-4 sm:px-6 md:px-10 lg:px-16 space-y-12 mt-12">
         <Categorysection />
-
-        {/* <div className="flex flex-col items-center mb-4">
-      <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">
-        Featured Products
-      </h1>
-      </div> */}
         <Feautredcard />
-        {/* <Menscard /> */}
       </div>
-
-      {/* <Ad /> */}
-
-      {/* <div className="px-4 sm:px-6 md:px-10 lg:px-16 space-y-12">
-        <Womenscard />
-        <Kidscard />
-        <Acceserioescard />
-      </div> */}
     </div>
   );
 }
