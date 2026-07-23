@@ -11,7 +11,7 @@ import Womenscard from "../../components/womenscard";
 
 export default function HeroSection() {
   return (
-    <div className="flex flex-col bg-[#fdfdfd]">
+    <div className="flex flex-col bg-[#fff]">
       {/* Hero Section */}
       <div
         className="relative bg-cover bg-center min-h-[60vh] sm:min-h-[80vh] md:min-h-screen"
@@ -54,17 +54,23 @@ export default function HeroSection() {
       {/* Page Content */}
       <div className="px-4 sm:px-6 md:px-10 lg:px-16 space-y-12 mt-12">
         <Categorysection />
+
+        {/* <div className="flex flex-col items-center mb-4">
+      <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">
+        Featured Products
+      </h1>
+      </div> */}
         <Feautredcard />
-        <Menscard />
+        {/* <Menscard /> */}
       </div>
 
-      <Ad />
+      {/* <Ad /> */}
 
-      <div className="px-4 sm:px-6 md:px-10 lg:px-16 space-y-12">
+      {/* <div className="px-4 sm:px-6 md:px-10 lg:px-16 space-y-12">
         <Womenscard />
         <Kidscard />
         <Acceserioescard />
-      </div>
+      </div> */}
     </div>
   );
 }

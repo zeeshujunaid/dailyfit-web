@@ -4,7 +4,7 @@ import Image from "next/image";
 import { getDocs, collection } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { db } from "../../utils/firebase";
+import { db } from "../../utils/firebase"; 
 
 export default function Loader() {
   const router = useRouter();

@@ -36,7 +36,7 @@ export default function ProductDetailsButton({ product }) {
     <>
       <button
         onClick={handleOpenModal}
-        className="text-white text-sm py-3 px-6 border-transparent bg-gradient-to-r from-white to-indigo-600 hover:bg-gradient-to-l hover:from-blue-500 hover:to-indigo-500 transition-all duration-300 ease-in-out transform hover:scale-105 shadow-lg"
+        className="text-gray-900 font-sans text-sm py-3 px-6 border-transparent bg-gradient-to-r from-amber-100 via-yellow-400 to-amber-500 hover:bg-gradient-to-l hover:from-amber-300 hover:via-yellow-500 hover:to-amber-600 transition-all duration-300 ease-in-out transform hover:scale-105 shadow-lg"
       >
         View Details
       </button>
