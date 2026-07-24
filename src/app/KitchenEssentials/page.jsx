@@ -27,7 +27,7 @@ export default function KitchenEssentials() {
       <Navbar />
       {products.length === 0 ? (
         <p className="text-center text-gray-500 mt-12 text-lg">
-          No Kids products found.
+          No products found.
         </p>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 justify-items-center mt-6">

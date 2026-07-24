@@ -27,7 +27,7 @@ export default function Womenscard() {
       <Navbar />
       {products.length === 0 ? (
         <p className="text-center text-gray-500 mt-12 text-lg">
-          No Kids products found.
+          No products found.
         </p>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 justify-items-center mt-6">
@@ -37,11 +37,11 @@ export default function Womenscard() {
               className="relative bg-white rounded-3xl border border-gray-200 shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden"
             >
               {/* Featured Badge */}
-              <div className="absolute top-4 left-4 z-10">
+              {/* <div className="absolute top-4 left-4 z-10">
                 <span className="bg-gradient-to-r from-yellow-300 via-yellow-400 to-amber-500 text-black text-xs font-bold px-3 py-1 rounded-full shadow">
                   ⭐ Featured
                 </span>
-              </div>
+              </div> */}
 
               {/* Wishlist */}
               <button className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-white flex items-center justify-center shadow-md hover:bg-red-500 hover:text-white transition-colors duration-300">
@@ -71,10 +71,6 @@ export default function Womenscard() {
                 {/* Price + Stock */}
                 <div className="flex items-center justify-between mt-5">
                   <div>
-                    <p className="text-xs text-gray-400 uppercase tracking-wide">
-                      Price
-                    </p>
-
                     <h4 className="text-2xl font-bold text-gray-900">
                       <span className="text-yellow-500 text-lg">PKR </span>
                       {product.price}

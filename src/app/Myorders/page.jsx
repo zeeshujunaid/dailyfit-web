@@ -14,34 +14,28 @@ export default function MyProfileAndOrders() {
   const [loading, setLoading] = useState(true);
   const [isDeleting, setIsDeleting] = useState(false);
   const [uid, setUid] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
 
   // Listen to orders in real-time
   const listenToOrders = (userId) => {
     const userDocRef = doc(db, "orders", userId);
 
-    const unsubscribe = onSnapshot(
-      userDocRef,
-      (docSnap) => {
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          const newOrders = Array.isArray(data.orders) ? data.orders : [];
+  const unsubscribeAuth = auth.onAuthStateChanged((user) => {
+    if (user) {
+      setIsLoggedIn(true);
 
-          setOrderData(newOrders);
-          localStorage.setItem("myOrders", JSON.stringify(newOrders));
-        } else {
-          setOrderData([]);
-          localStorage.setItem("myOrders", JSON.stringify([]));
-        }
-        setLoading(false);
-      },
-      (error) => {
-        console.error("Error fetching real-time order data:", error);
-        toast.error("Failed to load orders.");
-        setOrderData([]);
-        setLoading(false);
-      }
-    );
+      const userId = user.uid;
+      setUid(userId);
+
+      listenToOrders(userId);
+    } else {
+      setIsLoggedIn(false);
+      setUid(null);
+      setOrderData([]);
+      setLoading(false);
+    }
+  });
 
     return unsubscribe;
   };
@@ -100,11 +94,23 @@ export default function MyProfileAndOrders() {
 
       {/* Orders Section */}
       <div className="flex-1 mt-8 px-4">
-        <h1 className="text-2xl font-bold mb-4 text-gray-800 text-center">
-          My Orders
-        </h1>
 
-        {loading ? (
+        {!isLoggedIn ? (
+          <div className="flex flex-col items-center justify-center py-20">
+            <h1 className="text-3xl font-bold text-gray-800">
+              Please Login First
+            </h1>
+
+            <p className="text-gray-500 mt-2">Login to view your orders.</p>
+
+            <button
+              onClick={() => router.push("/Login")}
+              className="mt-6 bg-black text-white px-8 py-3 rounded-full hover:bg-yellow-400 hover:text-black transition-all duration-300"
+            >
+              Login
+            </button>
+          </div>
+        ) : loading ? (
           <div className="text-center text-lg font-semibold">Loading...</div>
         ) : orderData.length === 0 ? (
           <div className="text-center text-lg font-semibold">
@@ -142,7 +148,7 @@ export default function MyProfileAndOrders() {
                             </span>
                           ) : (
                             <button
-                            onClick={() => handleDelete(order.orderId, uid)}
+                              onClick={() => handleDelete(order.orderId, uid)}
                               className="bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded-full hover:bg-red-700"
                             >
                               Delete Order
@@ -185,7 +191,7 @@ export default function MyProfileAndOrders() {
                       </div>
                       <div>
                         {new Date(
-                          order.createdAt.seconds * 1000
+                          order.createdAt.seconds * 1000,
                         ).toLocaleDateString()}
                       </div>
                     </div>
@@ -216,7 +222,7 @@ export default function MyProfileAndOrders() {
                         </div>
                         <div className="text-gray-700">
                           {new Date(
-                            order.deliveryDate.seconds * 1000
+                            order.deliveryDate.seconds * 1000,
                           ).toLocaleDateString()}
                         </div>
                       </div>

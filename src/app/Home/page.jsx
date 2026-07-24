@@ -11,18 +11,17 @@ export default function HeroSection() {
       <div
         className="relative bg-cover bg-center min-h-[60vh] sm:min-h-[80vh] md:min-h-screen"
         style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
+          backgroundImage: "url('/Mainposter.png')",
         }}
       >
         {/* Overlay */}
-        <div className="absolute inset-0 bg-black/50 z-0"></div>
+        {/* <div className="absolute inset-0 bg-black/50 z-0"></div> */}
 
         {/* Navbar */}
         <Navbar />
 
         {/* Hero Text */}
-        <div className="relative z-10 flex items-center justify-center px-4 sm:px-6 md:px-16 pt-20 sm:pt-24 md:pt-32 h-full">
+        {/* <div className="relative z-10 flex items-center justify-center px-4 sm:px-6 md:px-16 pt-20 sm:pt-24 md:pt-32 h-full">
           <div className="max-w-4xl text-white space-y-5 text-center">
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-tight">
               <span className="text-red-500">Elevate</span> Your Style with{" "}
@@ -43,7 +42,7 @@ export default function HeroSection() {
               </h2>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* Page Content */}
