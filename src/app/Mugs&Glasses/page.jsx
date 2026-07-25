@@ -65,7 +65,7 @@ export default function Womenscard() {
                 <h3 className="text-sm sm:text-lg font-bold text-gray-900 line-clamp-2 min-h-[42px] sm:min-h-[56px]">
                   {product.name}
                 </h3>
-                <p className="mt-2 text-xs sm:text-sm text-gray-500 line-clamp-2 min-h-[36px] sm:min-h-[42px]">
+                <p className="mt-2 text-xs sm:text-sm text-gray-500 line-clamp-2 min-h-[32px] sm:min-h-[42px]">
                   {product.description ||
                     "Premium quality product crafted for style and comfort."}
                 </p>

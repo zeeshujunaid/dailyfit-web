@@ -38,7 +38,7 @@ export default function Adtocart({ product, onAddToCartSuccess, userId }) {
     <div className="flex justify-center items-center">
       <button
         onClick={handleAddToCart}
-        className="w-30 h-12 py-3 text-center bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-xl font-semibold text-lg hover:from-orange-500 hover:to-yellow-500 transition-all duration-300"
+        className="w-full h-12 py-3 text-center bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-xl font-semibold text-lg hover:from-orange-500 hover:to-yellow-500 transition-all duration-300"
       >
         Add To Cart
       </button>

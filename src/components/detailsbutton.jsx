@@ -8,6 +8,15 @@ export default function ProductDetailsButton({ product }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [uid, setUid] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  const [currentImage, setCurrentImage] = useState(0);
+
+  const images = [
+    product.image1,
+    product.image2,
+    product.image3,
+    product.image4,
+    product.image5,
+  ].filter(Boolean);
 
   useEffect(() => {
     const auth = getAuth();
@@ -18,8 +27,9 @@ export default function ProductDetailsButton({ product }) {
   }, []);
 
   const handleOpenModal = () => {
+    setCurrentImage(0);
+    setQuantity(1);
     setIsModalOpen(true);
-    setQuantity(1); // reset quantity on open
   };
 
   const closeModal = () => setIsModalOpen(false);
@@ -36,92 +46,160 @@ export default function ProductDetailsButton({ product }) {
     <>
       <button
         onClick={handleOpenModal}
-        className="text-gray-900 font-sans text-sm py-3 px-6 border-transparent bg-gradient-to-r from-amber-100 via-yellow-400 to-amber-500 hover:bg-gradient-to-l hover:from-amber-300 hover:via-yellow-500 hover:to-amber-600 transition-all duration-300 ease-in-out transform hover:scale-105 shadow-lg"
+        className="bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-500 hover:from-amber-400 hover:to-yellow-500 text-black font-semibold px-6 py-3 rounded-xl shadow-lg transition-all duration-300 hover:scale-105 w-full"
       >
         View Details
       </button>
 
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm transition-all duration-300">
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-center justify-center p-3 sm:p-6">
           <div
-            className="relative bg-white p-8 rounded-xl w-full max-w-4xl shadow-2xl transform transition-transform duration-500 ease-in-out"
+            className="relative bg-white rounded-[30px] w-[88%] xl:w-[80%] max-w-6xl shadow-2xl"
             style={{
               transform: isModalOpen ? "translateY(0)" : "translateY(100%)",
-              transition: "transform 0.5s ease-in-out",
+              transition: ".35s",
             }}
           >
             {/* Close Button */}
+
             <button
               onClick={closeModal}
-              className="absolute top-4 right-4 text-gray-700 text-3xl font-bold hover:text-red-500 transition"
+              className="absolute top-5 right-5 z-50 h-11 w-11 rounded-full bg-white shadow-lg hover:bg-red-500 hover:text-white text-2xl transition"
             >
               ×
             </button>
 
-            <div className="flex flex-col md:flex-row gap-6">
-              {/* Product Image */}
-              <div className="w-full md:w-1/2">
-                <img
-                  src={product.image1}
-                  alt={product.name}
-                  className="w-full h-64 md:h-96 object-cover rounded-lg shadow-xl border-4 border-white/30"
-                />
+            <div className="flex flex-col lg:flex-row gap-6 p-5 lg:p-6">
+              {" "}
+              {/* LEFT SIDE */}
+              <div className="w-full lg:w-1/2">
+                <div className="relative rounded-3xl overflow-hidden bg-gray-100">
+                  <img
+                    src={images[currentImage]}
+                    alt={product.name}
+                    className="w-full h-[260px] sm:h-[360px] lg:h-[430px] object-contain bg-white transition-all duration-300"
+                  />
+
+                  {images.length > 1 && (
+                    <>
+                      <button
+                        onClick={() =>
+                          setCurrentImage((prev) =>
+                            prev === 0 ? images.length - 1 : prev - 1,
+                          )
+                        }
+                        className="absolute left-4 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-white shadow-xl hover:scale-110 transition"
+                      >
+                        ←
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          setCurrentImage((prev) =>
+                            prev === images.length - 1 ? 0 : prev + 1,
+                          )
+                        }
+                        className="absolute right-4 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-white shadow-xl hover:scale-110 transition"
+                      >
+                        →
+                      </button>
+                    </>
+                  )}
+                </div>
+
+                {images.length > 1 && (
+                  <div className="flex justify-center gap-3 mt-5 flex-wrap">
+                    {images.map((img, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setCurrentImage(index)}
+                        className={`rounded-2xl overflow-hidden border-2 transition-all ${
+                          currentImage === index
+                            ? "border-yellow-500 scale-105 shadow-lg"
+                            : "border-gray-200 hover:border-yellow-400"
+                        }`}
+                      >
+                        <img
+                          src={img}
+                          alt=""
+                          className="w-20 h-20 object-cover"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
+              {/* RIGHT SIDE */}
+              <div className="w-full lg:w-1/2 flex flex-col justify-between">
+                <div>
+                  <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">
+                    {product.name}
+                  </h1>
 
-              {/* Product Details */}
-              <div className="w-full md:w-1/2 flex flex-col justify-between gap-4">
-                <div className="flex flex-col gap-2 text-gray-900">
-                  <div>
-                    <h2 className="text-xl font-semibold">Product Name:</h2>
-                    <p className="text-lg">{product.name}</p>
-                  </div>
+                  <p className="text-3xl font-bold text-yellow-500 mt-2">
+                    PKR {product.price}
+                  </p>
 
-                  <div>
-                    <h2 className="text-xl font-semibold">Price:</h2>
-                    <p className="text-lg text-yellow-500">
-                      PKR {product.price}
-                    </p>
-                  </div>
-
-                  <div>
-                    <h2 className="text-xl font-semibold">Description:</h2>
-                    <p className="text-sm text-gray-700">
-                      {product.description}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Quantity Controls */}
-                <div className="flex flex-col gap-2">
-                  <span className="text-lg font-semibold text-gray-900">
-                    Quantity:
-                  </span>
-                  <div className="flex items-center gap-4">
-                    <button
-                      onClick={decreaseQty}
-                      className="w-10 h-10 bg-gray-100 text-black rounded-full text-2xl font-semibold hover:bg-gray-200"
-                    >
-                      −
-                    </button>
-                    <span className="text-xl font-semibold text-gray-900">
-                      {quantity}
+                  <div className="flex flex-wrap gap-3 mt-3">
+                    <span className="bg-green-100 text-green-700 px-4 py-2 rounded-full text-sm font-semibold">
+                      ● In Stock
                     </span>
-                    <button
-                      onClick={increaseQty}
-                      className="w-10 h-10 bg-gray-100 text-black rounded-full text-2xl font-semibold hover:bg-gray-200"
-                    >
-                      +
-                    </button>
+
+                    <span className="bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-semibold">
+                      🚚 Fast Delivery
+                    </span>
                   </div>
+
+                  <div className="mt-3">
+                    <h2 className="font-bold text-xl mb-3">
+                      Product Description
+                    </h2>
+
+                    <div className="bg-gray-50 rounded-2xl border p-5 text-gray-600 leading-7">
+                      {product.description}
+                    </div>
+                  </div>
+
+                  {/* Quantity */}
+
+                  <div className="mt-4">
+                    <h2 className="font-bold text-xl mb-3">Quantity</h2>
+
+                    <div className="inline-flex items-center overflow-hidden rounded-2xl border shadow">
+                      <button
+                        onClick={decreaseQty}
+                        className="w-12 h-12 text-2xl hover:bg-gray-100 transition"
+                      >
+                        −
+                      </button>
+
+                      <span className="w-16 text-center font-bold text-xl">
+                        {quantity}
+                      </span>
+
+                      <button
+                        onClick={increaseQty}
+                        className="w-12 h-12 text-2xl hover:bg-gray-100 transition"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Features */}
+
                 </div>
 
-                {/* Add to Cart Button */}
-                <Adtocart
-                  product={{ ...product, quantity }}
-                  userId={uid}
-                  onAddToCartSuccess={closeModal}
-                  className="py-3 text-center bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-xl font-semibold text-lg hover:from-teal-500 hover:to-green-500 transition-all duration-300"
-                />
+                {/* Add To Cart */}
+
+                <div className="mt-5">
+                  <Adtocart
+                    product={{ ...product, quantity }}
+                    userId={uid}
+                    onAddToCartSuccess={closeModal}
+                    className="w-full py-4 rounded-2xl bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-lg hover:scale-[1.02] transition-all duration-300"
+                  />
+                </div>
               </div>
             </div>
           </div>
