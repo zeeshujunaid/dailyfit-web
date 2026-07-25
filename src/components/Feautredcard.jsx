@@ -37,7 +37,10 @@ export default function FeaturedProduct() {
   };
 
   return (
-    <section id="featured-products" className="py-12 px-10 bg-gray-50">
+    <section
+      id="featured-products"
+      className="py-8 px-3 sm:px-6 md:px-8 lg:px-10 bg-gray-50"
+    >
       <div className="max-w-7xl mx-auto">
         {/* Heading */}
         <div className="text-center mb-10">
@@ -56,7 +59,7 @@ export default function FeaturedProduct() {
           </p>
         ) : (
           <>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-7">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5 lg:gap-7">
               {products.slice(0, visibleCount).map((product) => (
                 <div
                   key={product.id}
@@ -64,7 +67,7 @@ export default function FeaturedProduct() {
                 >
                   {/* Featured Badge */}
                   <div className="absolute top-4 left-4 z-10">
-                    <span className="bg-gradient-to-r from-yellow-300 via-yellow-400 to-amber-500 text-black text-xs font-bold px-3 py-1 rounded-full shadow">
+                    <span className="bg-gradient-to-r from-yellow-300 via-yellow-400 to-amber-500 text-black text-[10px] sm:text-xs font-bold px-2 sm:px-3 py-1 rounded-full shadow">
                       ⭐ Featured
                     </span>
                   </div>
@@ -79,17 +82,17 @@ export default function FeaturedProduct() {
                     <img
                       src={product.image1}
                       alt={product.name}
-                      className="w-full h-60 object-cover"
+                      className="w-full h-40 sm:h-52 md:h-60 object-cover"
                     />
                   </div>
 
                   {/* Details */}
-                  <div className="p-5">
-                    <h3 className="text-lg font-bold text-gray-900 line-clamp-2 min-h-[56px]">
+                  <div className="p-3 sm:p-5">
+                    <h3 className="text-sm sm:text-lg font-bold text-gray-900 line-clamp-2 min-h-[42px] sm:min-h-[56px]">
                       {product.name}
                     </h3>
 
-                    <p className="mt-2 text-sm text-gray-500 line-clamp-2 min-h-[42px]">
+                    <p className="mt-2 text-xs sm:text-sm text-gray-500 line-clamp-2 min-h-[36px] sm:min-h-[42px]">
                       {product.description ||
                         "Premium quality product crafted for style and comfort."}
                     </p>
@@ -97,13 +100,13 @@ export default function FeaturedProduct() {
                     {/* Price + Stock */}
                     <div className="flex items-center justify-between mt-5">
                       <div>
-                        <h4 className="text-2xl font-bold text-gray-900">
+                        <h4 className="text-lg sm:text-2xl font-bold text-gray-900">
                           <span className="text-yellow-500 text-lg">PKR </span>
                           {product.price}
                         </h4>
                       </div>
 
-                      <span className="bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full border border-green-200">
+                      <span className="bg-green-100 text-green-700 text-[10px] sm:text-xs font-semibold px-2 sm:px-3 py-1 rounded-full border border-green-200">
                         ● In Stock
                       </span>
                     </div>
