@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import Navbar from "../../components/Navbar";
 import { useRouter } from "next/navigation";
 import { getDoc, updateDoc } from "firebase/firestore";
+import Cartandlogin from "../../components/cartndlogin";
 
 export default function MyProfileAndOrders() {
   const [orderData, setOrderData] = useState([]);
@@ -18,51 +19,50 @@ export default function MyProfileAndOrders() {
   const router = useRouter();
 
   // Listen to orders in real-time
-  const listenToOrders = (userId) => {
-    const userDocRef = doc(db, "orders", userId);
+ const listenToOrders = (userId) => {
+   const userDocRef = doc(db, "orders", userId);
 
-  const unsubscribeAuth = auth.onAuthStateChanged((user) => {
-    if (user) {
-      setIsLoggedIn(true);
+   return onSnapshot(
+     userDocRef,
+     (docSnap) => {
+       if (docSnap.exists()) {
+         const data = docSnap.data();
+         setOrderData(data.orders || []);
+       } else {
+         setOrderData([]);
+       }
 
-      const userId = user.uid;
-      setUid(userId);
-
-      listenToOrders(userId);
-    } else {
-      setIsLoggedIn(false);
-      setUid(null);
-      setOrderData([]);
-      setLoading(false);
-    }
-  });
-
-    return unsubscribe;
-  };
+       setLoading(false);
+     },
+     (error) => {
+       console.error(error);
+       setOrderData([]);
+       setLoading(false);
+     },
+   );
+ };
 
   // Auth state and fetch orders
-  useEffect(() => {
-    const auth = getAuth();
+ useEffect(() => {
+   const auth = getAuth();
 
-    const unsubscribeAuth = auth.onAuthStateChanged((user) => {
-      if (user) {
-        const userId = user.uid;
-        setUid(userId);
+   const unsubscribeAuth = auth.onAuthStateChanged((user) => {
+     if (user) {
+       setIsLoggedIn(true);
+       setUid(user.uid);
+       setLoading(true);
 
-        // Real-time orders listener
-        const unsubscribeOrders = listenToOrders(userId);
+       listenToOrders(user.uid);
+     } else {
+       setIsLoggedIn(false);
+       setUid(null);
+       setOrderData([]);
+       setLoading(false);
+     }
+   });
 
-        return () => unsubscribeOrders();
-      } else {
-        setUid(null);
-        setUserInfo(null);
-        setOrderData([]);
-        setLoading(false);
-      }
-    });
-
-    return () => unsubscribeAuth();
-  }, []);
+   return () => unsubscribeAuth();
+ }, []);
 
   
   const handleDelete = async (orderId, uid) => {
@@ -88,151 +88,173 @@ export default function MyProfileAndOrders() {
   };
   
 
-  return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
-      <Navbar />
+ return (
+   <div className="flex flex-col min-h-screen bg-gray-100">
+     <Navbar />
 
-      {/* Orders Section */}
-      <div className="flex-1 mt-8 px-4">
+     <div className="flex-1 mt-8 px-4">
+       {loading ? (
+         <div className="flex justify-center items-center py-20">
+           <h1 className="text-2xl font-semibold text-gray-700">Loading...</h1>
+         </div>
+       ) : !isLoggedIn ? (
+         <div className="flex flex-col items-center justify-center py-20">
+           <h1 className="text-4xl font-bold text-gray-800">
+             Please Login First
+           </h1>
 
-        {!isLoggedIn ? (
-          <div className="flex flex-col items-center justify-center py-20">
-            <h1 className="text-3xl font-bold text-gray-800">
-              Please Login First
-            </h1>
+           <p className="text-gray-500 mt-3 text-lg">
+             Login to view your orders.
+           </p>
+           <div className="mt-5">
+             <Cartandlogin/>
+           </div>
+         </div>
+       ) : orderData.length === 0 ? (
+         <div className="flex flex-col items-center justify-center py-20">
+           <h1 className="text-4xl font-bold text-gray-800">
+             You Didn't Order Yet
+           </h1>
 
-            <p className="text-gray-500 mt-2">Login to view your orders.</p>
+           <p className="text-gray-500 mt-3 text-lg">
+             Hurry up! Order your favourite products now.
+           </p>
 
-            <button
-              onClick={() => router.push("/Login")}
-              className="mt-6 bg-black text-white px-8 py-3 rounded-full hover:bg-yellow-400 hover:text-black transition-all duration-300"
-            >
-              Login
-            </button>
-          </div>
-        ) : loading ? (
-          <div className="text-center text-lg font-semibold">Loading...</div>
-        ) : orderData.length === 0 ? (
-          <div className="text-center text-lg font-semibold">
-            No orders available
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {orderData.map((order, index) => (
-              <div
-                key={index}
-                className="border p-6 rounded-lg shadow-md bg-white hover:shadow-lg transition-all"
-              >
-                <div className="space-y-2">
-                  {/* Status */}
-                  <div className="flex justify-between items-center">
-                    <div className="font-semibold text-gray-700">Status:</div>
-                    <div className="capitalize flex items-center gap-2">
-                      {order.status}
-                      {order.status === "delivering" && order.deliveryDate && (
-                        <div className="flex items-center gap-2">
-                          <span className="bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded-full">
-                            Delivery Date {order.deliveryDate}
-                          </span>
-                        </div>
-                      )}
-                      {order.status === "cancelled" && (
-                        <div className="flex items-center gap-2">
-                          <span className="bg-red-100 text-red-700 text-xs font-semibold px-2 py-1 rounded-full">
-                            Order has been cancelled by admin
-                          </span>
+           <button
+             onClick={() => router.push("/Home")}
+             className="mt-8 bg-black text-white px-8 py-3 rounded-full font-semibold hover:bg-yellow-400 hover:text-black transition-all duration-300"
+           >
+             Shop Now
+           </button>
+         </div>
+       ) : (
+         <>
+           <h1 className="text-3xl font-bold mb-8 text-gray-800 text-center">
+             My Orders
+           </h1>
 
-                          {isDeleting ? (
-                            <span className="text-xs text-gray-500">
-                              Deleting...
-                            </span>
-                          ) : (
-                            <button
-                              onClick={() => handleDelete(order.orderId, uid)}
-                              className="bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded-full hover:bg-red-700"
-                            >
-                              Delete Order
-                            </button>
-                          )}
-                        </div>
-                      )}
+           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+             {orderData.map((order, index) => (
+               <div
+                 key={index}
+                 className="border p-6 rounded-lg shadow-md bg-white hover:shadow-lg transition-all"
+               >
+                 <div className="space-y-2">
+                   {/* Status */}
+                   <div className="flex justify-between items-center">
+                     <div className="font-semibold text-gray-700">Status:</div>
 
-                      {order.status === "delivered" && (
-                        <span className="bg-blue-100 text-blue-700 text-xs font-semibold px-2 py-1 rounded-full">
-                          Delivered
-                        </span>
-                      )}
-                    </div>
-                  </div>
+                     <div className="capitalize flex items-center gap-2">
+                       {order.status}
 
-                  {/* Payment Method */}
-                  <div className="flex justify-between">
-                    <div className="font-semibold text-gray-700">
-                      Payment Method:
-                    </div>
-                    <div>{order.paymentMethod}</div>
-                  </div>
+                       {order.status === "delivering" && order.deliveryDate && (
+                         <span className="bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded-full">
+                           Delivery Date {order.deliveryDate}
+                         </span>
+                       )}
 
-                  {/* Total Amount */}
-                  <div className="flex justify-between">
-                    <div className="font-semibold text-gray-700">
-                      Total Amount:
-                    </div>
-                    <div className="text-green-600 font-bold">
-                      ${order.totalAmount}
-                    </div>
-                  </div>
+                       {order.status === "cancelled" && (
+                         <>
+                           <span className="bg-red-100 text-red-700 text-xs font-semibold px-2 py-1 rounded-full">
+                             Order Cancelled
+                           </span>
 
-                  {/* Created At */}
-                  {order.createdAt?.seconds && (
-                    <div className="flex justify-between">
-                      <div className="font-semibold text-gray-700">
-                        Ordered On:
-                      </div>
-                      <div>
-                        {new Date(
-                          order.createdAt.seconds * 1000,
-                        ).toLocaleDateString()}
-                      </div>
-                    </div>
-                  )}
+                           {isDeleting ? (
+                             <span className="text-xs text-gray-500">
+                               Deleting...
+                             </span>
+                           ) : (
+                             <button
+                               onClick={() => handleDelete(order.orderId, uid)}
+                               className="bg-red-500 text-white text-xs px-2 py-1 rounded-full hover:bg-red-700"
+                             >
+                               Delete Order
+                             </button>
+                           )}
+                         </>
+                       )}
 
-                  {/* Items List */}
-                  {Array.isArray(order.items) && order.items.length > 0 && (
-                    <div className="mt-4">
-                      <div className="font-semibold mb-2 text-gray-800">
-                        Items:
-                      </div>
-                      <ul className="list-disc list-inside space-y-1">
-                        {order.items.map((item, idx) => (
-                          <li key={idx} className="text-gray-700">
-                            {item.name} (x{item.quantity})
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
+                       {order.status === "delivered" && (
+                         <span className="bg-blue-100 text-blue-700 text-xs font-semibold px-2 py-1 rounded-full">
+                           Delivered
+                         </span>
+                       )}
+                     </div>
+                   </div>
 
-                  {/* Delivery Date */}
-                  {order.status === "delivering" &&
-                    order.deliveryDate?.seconds && (
-                      <div className="mt-4">
-                        <div className="font-semibold text-green-600 mb-1">
-                          DeliveryDate:
-                        </div>
-                        <div className="text-gray-700">
-                          {new Date(
-                            order.deliveryDate.seconds * 1000,
-                          ).toLocaleDateString()}
-                        </div>
-                      </div>
-                    )}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  );
+                   {/* Payment */}
+                   <div className="flex justify-between">
+                     <span className="font-semibold text-gray-700">
+                       Payment Method:
+                     </span>
+                     <span>{order.paymentMethod}</span>
+                   </div>
+
+                   {/* Amount */}
+                   <div className="flex justify-between">
+                     <span className="font-semibold text-gray-700">
+                       Total Amount:
+                     </span>
+
+                     <span className="text-green-600 font-bold">
+                       ${order.totalAmount}
+                     </span>
+                   </div>
+
+                   {/* Ordered Date */}
+                   {order.createdAt?.seconds && (
+                     <div className="flex justify-between">
+                       <span className="font-semibold text-gray-700">
+                         Ordered On:
+                       </span>
+
+                       <span>
+                         {new Date(
+                           order.createdAt.seconds * 1000,
+                         ).toLocaleDateString()}
+                       </span>
+                     </div>
+                   )}
+
+                   {/* Items */}
+                   {order.items?.length > 0 && (
+                     <div className="mt-4">
+                       <div className="font-semibold mb-2 text-gray-800">
+                         Items:
+                       </div>
+
+                       <ul className="list-disc list-inside space-y-1">
+                         {order.items.map((item, idx) => (
+                           <li key={idx}>
+                             {item.name} (x{item.quantity})
+                           </li>
+                         ))}
+                       </ul>
+                     </div>
+                   )}
+
+                   {/* Delivery Date */}
+                   {order.status === "delivering" &&
+                     order.deliveryDate?.seconds && (
+                       <div className="mt-4">
+                         <div className="font-semibold text-green-600">
+                           Delivery Date
+                         </div>
+
+                         <div>
+                           {new Date(
+                             order.deliveryDate.seconds * 1000,
+                           ).toLocaleDateString()}
+                         </div>
+                       </div>
+                     )}
+                 </div>
+               </div>
+             ))}
+           </div>
+         </>
+       )}
+     </div>
+   </div>
+ );
 }
