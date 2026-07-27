@@ -377,198 +377,238 @@ Please confirm my order. I am ready to complete the online payment.`;
               Next
             </button>
             {showModal && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4">
-                <div className="relative w-full max-w-3xl rounded-3xl bg-white shadow-2xl overflow-hidden">
-                  {/* Header */}
-                  <div className="flex items-center justify-between border-b px-6 py-5">
-                    <div>
-                      <h2 className="text-2xl font-bold text-gray-900">
-                        Shipping Details
-                      </h2>
+              <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md overflow-y-auto">
+                <div className="flex min-h-screen items-center justify-center p-3 sm:p-5">
+                  <div className="relative w-full max-w-4xl bg-white rounded-3xl shadow-2xl max-h-[95vh] flex flex-col overflow-hidden">
+                    {/* Header */}
 
-                      <p className="text-sm text-gray-500 mt-1">
-                        Please enter your delivery information.
-                      </p>
+                    <div className="sticky top-0 z-20 bg-white border-b px-6 py-5 flex items-center justify-between">
+                      <div>
+                        <h2 className="text-2xl font-bold text-gray-900">
+                          Secure Checkout
+                        </h2>
+
+                        <p className="text-sm text-gray-500 mt-1">
+                          Complete your shipping details.
+                        </p>
+                      </div>
+
+                      <button
+                        onClick={() => setShowModal(false)}
+                        className="h-10 w-10 rounded-full hover:bg-red-100 text-2xl text-gray-600 hover:text-red-600 transition"
+                      >
+                        ×
+                      </button>
                     </div>
 
-                    <button
-                      onClick={() => setShowModal(false)}
-                      className="h-10 w-10 rounded-full hover:bg-red-100 text-2xl text-gray-600 hover:text-red-600 transition"
-                    >
-                      ×
-                    </button>
-                  </div>
+                    {/* Body */}
 
-                  <div className="grid lg:grid-cols-2 gap-8 p-6">
-                    {/* LEFT */}
-                    <div className="space-y-5">
-                      {/* Full Address */}
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">
-                          Full Address
-                        </label>
+                    <div className="flex-1 overflow-y-auto">
+                      <div className="grid lg:grid-cols-2 gap-8 p-6">
+                        {/* LEFT */}
 
-                        <input
-                          type="text"
-                          placeholder="Enter your full address"
-                          value={address}
-                          onChange={(e) => setAddress(e.target.value)}
-                          className="w-full rounded-xl border border-gray-300 px-4 py-3 bg-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-300 outline-none transition"
-                        />
-                      </div>
+                        <div className="space-y-5">
+                          <div>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                              Full Address
+                            </label>
 
-                      {/* Street */}
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">
-                          Street Name
-                        </label>
+                            <input
+                              type="text"
+                              placeholder="Enter your full address"
+                              value={address}
+                              onChange={(e) => setAddress(e.target.value)}
+                              className="w-full rounded-xl border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-yellow-400 outline-none"
+                            />
+                          </div>
 
-                        <input
-                          type="text"
-                          placeholder="Street / Area"
-                          value={street}
-                          onChange={(e) => setStreet(e.target.value)}
-                          className="w-full rounded-xl border border-gray-300 px-4 py-3 bg-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-300 outline-none transition"
-                        />
-                      </div>
+                          <div>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                              Street Name
+                            </label>
 
-                      {/* City & Postal */}
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-2">
-                            City
-                          </label>
+                            <input
+                              type="text"
+                              placeholder="Street / Area"
+                              value={street}
+                              onChange={(e) => setStreet(e.target.value)}
+                              className="w-full rounded-xl border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-yellow-400 outline-none"
+                            />
+                          </div>
 
-                          <input
-                            type="text"
-                            placeholder="City"
-                            value={city}
-                            onChange={(e) => setCity(e.target.value)}
-                            className="w-full rounded-xl border border-gray-300 px-4 py-3 bg-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-300 outline-none transition"
-                          />
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                City
+                              </label>
+
+                              <input
+                                type="text"
+                                placeholder="City"
+                                value={city}
+                                onChange={(e) => setCity(e.target.value)}
+                                className="w-full rounded-xl border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-yellow-400 outline-none"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                Postal Code
+                              </label>
+
+                              <input
+                                type="text"
+                                placeholder="Postal Code"
+                                value={postalCode}
+                                onChange={(e) => setPostalCode(e.target.value)}
+                                className="w-full rounded-xl border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-yellow-400 outline-none"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                House / Flat No.
+                              </label>
+
+                              <input
+                                type="text"
+                                placeholder="House No."
+                                value={houseNumber}
+                                onChange={(e) => setHouseNumber(e.target.value)}
+                                className="w-full rounded-xl border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-yellow-400 outline-none"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                Phone Number
+                              </label>
+
+                              <input
+                                type="number"
+                                placeholder="03XXXXXXXXX"
+                                value={phone}
+                                onChange={(e) => setPhone(e.target.value)}
+                                className="w-full rounded-xl border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-yellow-400 outline-none"
+                              />
+                            </div>
+                          </div>
+
+                          <div>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                              Special Instructions
+                              <span className="text-xs text-gray-400 ml-2">
+                                (Optional)
+                              </span>
+                            </label>
+
+                            <input
+                              type="text"
+                              placeholder="Example: Call before delivery..."
+                              value={instructions}
+                              onChange={(e) => setInstructions(e.target.value)}
+                              className="w-full rounded-xl border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-yellow-400 outline-none"
+                            />
+                          </div>
                         </div>
 
-                        <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-2">
-                            Postal Code
-                          </label>
+                        {/* RIGHT */}
 
-                          <input
-                            type="text"
-                            placeholder="Postal Code"
-                            value={postalCode}
-                            onChange={(e) => setPostalCode(e.target.value)}
-                            className="w-full rounded-xl border border-gray-300 px-4 py-3 bg-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-300 outline-none transition"
-                          />
+                        <div className="space-y-5">
+                          <div className="rounded-2xl border bg-gray-50 p-6">
+                            <h3 className="text-xl font-bold">Order Summary</h3>
+
+                            <div className="space-y-4 mt-5">
+                              <div className="flex justify-between">
+                                <span className="text-gray-500">Order ID</span>
+                                <span className="font-bold text-green-600">
+                                  ORD-{orderId}
+                                </span>
+                              </div>
+
+                              <div className="flex justify-between">
+                                <span className="text-gray-500">Items</span>
+                                <span className="font-semibold">
+                                  {cartItems.length}
+                                </span>
+                              </div>
+
+                              <div className="flex justify-between">
+                                <span className="text-gray-500">Shipping</span>
+                                <span className="font-semibold text-green-600">
+                                  FREE
+                                </span>
+                              </div>
+
+                              <div className="flex justify-between">
+                                <span className="text-gray-500">Payment</span>
+                                <span className="font-semibold">WhatsApp</span>
+                              </div>
+
+                              <hr />
+
+                              <div className="flex justify-between items-center">
+                                <span className="text-lg font-bold">Total</span>
+
+                                <span className="text-3xl font-bold text-red-600">
+                                  PKR {totalPrice.toLocaleString()}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="rounded-2xl border border-yellow-200 bg-yellow-50 p-4">
+                            <div className="flex gap-3">
+                              <div className="text-2xl">💬</div>
+
+                              <p className="text-sm leading-6 text-yellow-800">
+                                After placing your order you'll automatically
+                                open our
+                                <strong> WhatsApp </strong>
+                                where you'll send your
+                                <strong> Order ID </strong>
+                                and complete your online payment.
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="grid grid-cols-3 gap-3">
+                            <div className="rounded-xl border p-3 bg-white text-center">
+                              🚚
+                              <p className="text-xs mt-2 font-semibold">
+                                Fast Delivery
+                              </p>
+                            </div>
+
+                            <div className="rounded-xl border p-3 bg-white text-center">
+                              🔒
+                              <p className="text-xs mt-2 font-semibold">
+                                Secure
+                              </p>
+                            </div>
+
+                            <div className="rounded-xl border p-3 bg-white text-center">
+                              ⭐
+                              <p className="text-xs mt-2 font-semibold">
+                                Premium
+                              </p>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-
-                      {/* House Number & Phone */}
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-2">
-                            House / Flat No.
-                          </label>
-
-                          <input
-                            type="text"
-                            placeholder="House / Flat Number"
-                            value={houseNumber}
-                            onChange={(e) => setHouseNumber(e.target.value)}
-                            className="w-full rounded-xl border border-gray-300 px-4 py-3 bg-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-300 outline-none transition"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-2">
-                            Phone Number
-                          </label>
-
-                          <input
-                            type="number"
-                            placeholder="03XXXXXXXXX"
-                            value={phone}
-                            onChange={(e) => setPhone(e.target.value)}
-                            className="w-full rounded-xl border border-gray-300 px-4 py-3 bg-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-300 outline-none transition"
-                          />
-                        </div>
-                      </div>
-
-                      {/* Special Instructions */}
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">
-                          Special Instructions
-                          <span className="ml-2 text-xs font-normal text-gray-400">
-                            (Optional)
-                          </span>
-                        </label>
-
-                        <textarea
-                          rows={2}
-                          placeholder="Example: Call before delivery, Leave at the gate, Deliver after 6 PM..."
-                          value={instructions}
-                          onChange={(e) => setInstructions(e.target.value)}
-                          className="w-full resize-none rounded-xl border border-gray-300 px-4 py-3 bg-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-300 outline-none transition"
-                        />
                       </div>
                     </div>
 
-                    {/* RIGHT */}
-                    <div>
-                      <div className="rounded-2xl border bg-gray-50 p-6">
-                        <h3 className="text-xl font-bold">Order Summary</h3>
+                    {/* Footer */}
 
-                        <div className="mt-5 space-y-4">
-                          <div className="flex justify-between">
-                            <span className="text-gray-500">Order ID</span>
-
-                            <span className="font-semibold">ORD-{orderId}</span>
-                          </div>
-
-                          <div className="flex justify-between">
-                            <span className="text-gray-500">Items</span>
-
-                            <span className="font-semibold">
-                              {cartItems.length}
-                            </span>
-                          </div>
-
-                          <div className="flex justify-between">
-                            <span className="text-gray-500">Shipping</span>
-
-                            <span className="text-green-600 font-semibold">
-                              FREE
-                            </span>
-                          </div>
-
-                          <hr />
-
-                          <div className="flex justify-between text-xl">
-                            <span className="font-bold">Total</span>
-
-                            <span className="font-bold text-red-600">
-                              PKR {totalPrice.toLocaleString()}
-                            </span>
-                          </div>
-                        </div>
-
-                        <div className="mt-6 rounded-xl bg-yellow-50 border border-yellow-200 p-4">
-                          <p className="text-sm text-yellow-800">
-                            After placing your order, you'll be redirected to
-                            our
-                            <strong> WhatsApp </strong>
-                            where you'll send your Order ID and complete the
-                            online payment.
-                          </p>
-                        </div>
-
-                        <button
-                          onClick={Handlebill}
-                          className="mt-6 w-full rounded-2xl bg-gradient-to-r from-red-600 to-red-500 py-4 text-lg font-bold text-white hover:scale-[1.02] transition"
-                        >
-                          Place Order
-                        </button>
-                      </div>
+                    <div className="sticky bottom-0 bg-white border-t p-5">
+                      <button
+                        onClick={Handlebill}
+                        className="w-full rounded-2xl bg-gradient-to-r from-red-600 via-red-500 to-red-600 py-4 text-lg font-bold text-white shadow-lg hover:scale-[1.02] transition"
+                      >
+                        Place Order & Continue to WhatsApp →
+                      </button>
                     </div>
                   </div>
                 </div>
