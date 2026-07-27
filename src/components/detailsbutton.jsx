@@ -52,9 +52,10 @@ export default function ProductDetailsButton({ product }) {
       </button>
 
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-center justify-center p-3 sm:p-6">
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-center justify-center p-2 sm:p-6 overflow-y-auto">
+          {" "}
           <div
-            className="relative bg-white rounded-[30px] w-[88%] xl:w-[80%] max-w-6xl shadow-2xl"
+            className="relative bg-white rounded-[30px] w-[95%] sm:w-[90%] lg:w-[88%] xl:w-[80%] max-w-6xl max-h-[95vh] overflow-y-auto shadow-2xl"
             style={{
               transform: isModalOpen ? "translateY(0)" : "translateY(100%)",
               transition: ".35s",
@@ -64,7 +65,7 @@ export default function ProductDetailsButton({ product }) {
 
             <button
               onClick={closeModal}
-              className="absolute top-5 right-5 z-50 h-11 w-11 rounded-full bg-white shadow-lg hover:bg-red-500 hover:text-white text-2xl transition"
+              className="absolute top-3 right-3 sm:top-5 sm:right-5 z-50 h-11 w-11 rounded-full bg-white shadow-lg hover:bg-red-500 hover:text-white text-2xl transition"
             >
               ×
             </button>
@@ -77,7 +78,7 @@ export default function ProductDetailsButton({ product }) {
                   <img
                     src={images[currentImage]}
                     alt={product.name}
-                    className="w-full h-[260px] sm:h-[360px] lg:h-[430px] object-contain bg-white transition-all duration-300"
+                    className="w-full h-[220px] sm:h-[320px] lg:h-[430px] object-contain bg-white"
                   />
 
                   {images.length > 1 && (
@@ -132,11 +133,11 @@ export default function ProductDetailsButton({ product }) {
               {/* RIGHT SIDE */}
               <div className="w-full lg:w-1/2 flex flex-col justify-between">
                 <div>
-                  <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">
+                  <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold">
                     {product.name}
                   </h1>
 
-                  <p className="text-3xl font-bold text-yellow-500 mt-2">
+                  <p className="text-2xl sm:text-3xl font-bold text-yellow-500">
                     PKR {product.price}
                   </p>
 
@@ -187,7 +188,6 @@ export default function ProductDetailsButton({ product }) {
                   </div>
 
                   {/* Features */}
-
                 </div>
 
                 {/* Add To Cart */}
