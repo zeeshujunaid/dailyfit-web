@@ -12,14 +12,18 @@ import { v4 as uuidv4 } from "uuid"; // Importing uuid for unique order ID
 export default function Cart() {
   const [cartItems, setCartItems] = useState([]);
   const [uid, setUid] = useState(null);
+  const [customerName, setCustomerName] = useState("");
+  const [customerPhone, setCustomerPhone] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
+  const [orderId, setOrderId] = useState("");
   const [street, setStreet] = useState("");
   const [houseNumber, setHouseNumber] = useState("");
   const [city, setCity] = useState("");
   const [postalCode, setPostalCode] = useState("");
-  const [cashOnDelivery, setCashOnDelivery] = useState(false);
+  const [instructions, setInstructions] = useState("");
+  const [termandcondition, settermandcondition] = useState(false);
   const router = useRouter();
 
   // Get the user ID
@@ -27,8 +31,9 @@ export default function Cart() {
     const auth = getAuth();
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
-        setUid(user.uid);
+        setUid(user.uid,user.displayName);
       }
+      console.log(auth.currentUser)
     });
 
     return () => unsubscribe();
@@ -54,8 +59,8 @@ export default function Cart() {
       return;
     }
 
-    if (!cashOnDelivery) {
-      toast.error("Please select a payment method");
+    if (!termandcondition) {
+      toast.error("Please accept the terms and conditions");
       return;
     }
 
@@ -77,10 +82,9 @@ export default function Cart() {
       const docSnap = await getDoc(userOrdersRef);
 
       // Generate a unique order ID
-      const orderId = uuidv4(); // Unique order ID for each order
 
       const newOrder = {
-        orderId, // Add orderId to the order
+        orderId: orderId,
         items: cartItems.map((item) => ({
           name: item.name,
           quantity: item.quantity,
@@ -92,6 +96,7 @@ export default function Cart() {
         status: "pending",
         address: fullAddress,
         phone,
+        instructions: instructions || "No special instructions",
         createdAt: new Date(),
       };
 
@@ -114,7 +119,24 @@ export default function Cart() {
       console.error("Error saving order: ", error);
       toast.error("Something Went Wrong, Please Try Again Later.");
     }
-  };
+
+    // Redirect to WhatsApp
+    const whatsappNumber = "923058077535";
+
+    const auth = getAuth();
+    const customerName = auth.currentUser?.displayName || "Customer";
+
+    const message = `Hi, I placed an order on your website.
+
+👤 Name: ${customerName}
+🆔 Order ID: ${orderId}
+💰 Total Amount: PKR ${totalPrice}
+📞 Phone: ${phone}
+
+Please confirm my order. I am ready to complete the online payment.`;
+
+    window.location.href = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+  };;
 
   const handleRemoveItem = (removeIndex) => {
     const updatedCart = cartItems.filter((_, index) => index !== removeIndex);
@@ -127,6 +149,22 @@ export default function Cart() {
     toast.success("Item removed from cart");
   };
 
+  const updateQuantity = (index, action) => {
+    const updatedCart = [...cartItems];
+
+    if (action === "increase") {
+      updatedCart[index].quantity += 1;
+    } else if (action === "decrease" && updatedCart[index].quantity > 1) {
+      updatedCart[index].quantity -= 1;
+    }
+
+    setCartItems(updatedCart);
+
+    if (uid) {
+      localStorage.setItem(`cart-${uid}`, JSON.stringify(updatedCart));
+    }
+  };
+
   return (
     <>
       <div className="bg-gray-100">
@@ -136,7 +174,35 @@ export default function Cart() {
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left - Cart Items */}
           <div className="lg:col-span-2 space-y-6">
-            <h2 className="text-3xl font-bold text-red-600">Your Cart</h2>
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 mb-5">
+              <h2 className="text-3xl font-bold text-red-600 whitespace-nowrap">
+                Your Cart
+              </h2>
+
+              <div className="flex items-center gap-2 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2 max-w-2xl">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-4 h-4 text-blue-600 shrink-0"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+
+                <p className="text-xs text-blue-800 leading-5">
+                  <span className="font-semibold">Important:</span> After
+                  placing your order, you'll be redirected to WhatsApp. Send
+                  your <strong>Order ID</strong> and complete the payment to
+                  confirm your order.
+                </p>
+              </div>
+            </div>
 
             {cartItems.length === 0 ? (
               <div className="bg-white p-6 rounded-xl shadow text-gray-600 text-center">
@@ -146,30 +212,106 @@ export default function Cart() {
               cartItems.map((item, index) => (
                 <div
                   key={index}
-                  className="flex items-center gap-4 p-4 bg-white rounded-xl shadow"
+                  className="group bg-white rounded-3xl border border-gray-200 shadow-md hover:shadow-2xl transition-all duration-300 p-5"
                 >
-                  <img
-                    src={item.image1}
-                    alt={item.name}
-                    className="w-24 h-24 object-cover rounded-lg border"
-                  />
-                  <div className="flex-1">
-                    <h3 className="text-lg font-bold text-gray-800">
-                      {item.name}
-                    </h3>
-                    <p className="text-sm text-gray-500">
-                      Quantity: {item.quantity}
-                    </p>
-                    <button
-                      onClick={() => handleRemoveItem(index)}
-                      className="mt-2 text-sm text-red-600 font-medium hover:underline"
-                    >
-                      Remove This Item
-                    </button>
+                  <div className="flex flex-col md:flex-row gap-6">
+                    {/* Product Image */}
+                    <div className="relatie">
+                      <img
+                        src={item.image1}
+                        alt={item.name}
+                        className="w-full md:w-36 h-56 object-cover rounded-2xl border border-gray-200"
+                      />
+                    </div>
+
+                    {/* Product Details */}
+                    <div className="flex-1 flex flex-col justify-between">
+                      <div>
+                        <h2 className="text-sm sm:text-lg font-bold text-gray-900 line-clamp-2">
+                          {item.name}
+                        </h2>
+
+                        <p className="text-sm text-gray-500 mt-2">
+                          Premium quality product with elegant finish and fast
+                          delivery.
+                        </p>
+
+                        <div className="flex flex-wrap gap-2 mt-4">
+                          <span className="px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-semibold">
+                            ● In Stock
+                          </span>
+
+                          <span className="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold">
+                            🚚 Fast Delivery
+                          </span>
+
+                          <span className="px-3 py-1 rounded-full bg-yellow-100 text-yellow-700 text-xs font-semibold">
+                            🔒 Secure Checkout
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Bottom */}
+                      <div className="flex flex-wrap justify-between items-end gap-5 mt-6">
+                        {/* Quantity */}
+                        <div>
+                          <p className="text-sm text-gray-500 mb-2">Quantity</p>
+
+                          <div className="flex items-center rounded-xl overflow-hidden border shadow-sm">
+                            <button
+                              onClick={() => updateQuantity(index, "decrease")}
+                              className="w-11 h-11 bg-gray-100 hover:bg-gray-200 transition text-xl font-bold"
+                            >
+                              −
+                            </button>
+
+                            <span className="w-12 text-center font-bold text-lg">
+                              {item.quantity}
+                            </span>
+
+                            <button
+                              onClick={() => updateQuantity(index, "increase")}
+                              className="w-11 h-11 bg-gray-100 hover:bg-gray-200 transition text-xl font-bold"
+                            >
+                              +
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Remove */}
+                        <button
+                          onClick={() => handleRemoveItem(index)}
+                          className="px-5 py-2 rounded-xl border border-red-200 text-red-600 hover:bg-red-600 hover:text-white transition font-semibold"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Price */}
+                    <div className="md:w-56">
+                      <div className="rounded-2xl bg-gradient-to-br from-yellow-50 to-white border border-yellow-200 p-5 shadow-sm">
+                        <p className="text-xs text-gray-500">Price For Each</p>
+
+                        <h3 className="text-2xl font-bold mt-1 text-yellow-500">
+                          PKR{" "}
+                          <span className="text-gray-900">{item.price}</span>
+                        </h3>
+
+                        <div className="border-t my-4"></div>
+
+                        <p className="text-sm text-gray-500">Total</p>
+
+                        <h1 className="text-3xl font-extrabold text-red-600 mt-1">
+                          PKR {(item.price * item.quantity).toLocaleString()}
+                        </h1>
+
+                        {/* <div className="mt-4 text-xs text-gray-500">
+                          {item.quantity} × PKR {item.price}
+                        </div> */}
+                      </div>
+                    </div>
                   </div>
-                  <p className="text-lg font-semibold text-red-600">
-                    PKR {item.price * item.quantity}
-                  </p>
                 </div>
               ))
             )}
@@ -205,12 +347,12 @@ export default function Cart() {
               <input
                 type="checkbox"
                 id="cod"
-                checked={cashOnDelivery}
-                onChange={(e) => setCashOnDelivery(e.target.checked)}
+                checked={termandcondition}
+                onChange={(e) => settermandcondition(e.target.checked)}
                 className="w-4 h-4 accent-red-600"
               />
               <label htmlFor="cod" className="text-gray-700 font-medium">
-                Cash on Delivery
+                Accept Terms and Conditions
               </label>
             </div>
 
@@ -219,83 +361,215 @@ export default function Cart() {
               className="w-full bg-red-600 text-white py-2 rounded-lg font-semibold hover:bg-red-700 transition"
               onClick={() => {
                 if (!cartItems.length) return toast.error("Cart is empty");
-                if (!cashOnDelivery)
-                  return toast.error("Select payment method");
+
+                if (!termandcondition)
+                  return toast.error("Please accept the terms and conditions");
+
+                // Generate random 6-digit Order ID
+                const randomOrderId = Math.floor(
+                  100000 + Math.random() * 900000,
+                );
+                setOrderId(randomOrderId.toString());
+
                 setShowModal(true);
               }}
             >
               Next
             </button>
             {showModal && (
-              <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50">
-                <div className="bg-white rounded-xl shadow-xl w-full max-w-lg p-6 space-y-6">
-                  {/* Modal Header */}
-                  <div className="flex justify-between items-center border-b pb-3">
-                    <h3 className="text-xl font-semibold text-gray-800">
-                      Shipping Details
-                    </h3>
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4">
+                <div className="relative w-full max-w-3xl rounded-3xl bg-white shadow-2xl overflow-hidden">
+                  {/* Header */}
+                  <div className="flex items-center justify-between border-b px-6 py-5">
+                    <div>
+                      <h2 className="text-2xl font-bold text-gray-900">
+                        Shipping Details
+                      </h2>
+
+                      <p className="text-sm text-gray-500 mt-1">
+                        Please enter your delivery information.
+                      </p>
+                    </div>
+
                     <button
                       onClick={() => setShowModal(false)}
-                      className="text-red-500 hover:text-red-700 text-lg font-bold"
+                      className="h-10 w-10 rounded-full hover:bg-red-100 text-2xl text-gray-600 hover:text-red-600 transition"
                     >
-                      &times;
+                      ×
                     </button>
                   </div>
 
-                  {/* Form Inputs */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <input
-                      type="text"
-                      placeholder="Address"
-                      value={address}
-                      onChange={(e) => setAddress(e.target.value)}
-                      className="border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-400"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Street"
-                      value={street}
-                      onChange={(e) => setStreet(e.target.value)}
-                      className="border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-400"
-                    />
-                    <input
-                      type="text"
-                      placeholder="House/Flat No."
-                      value={houseNumber}
-                      onChange={(e) => setHouseNumber(e.target.value)}
-                      className="border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-400"
-                    />
-                    <input
-                      type="text"
-                      placeholder="City"
-                      value={city}
-                      onChange={(e) => setCity(e.target.value)}
-                      className="border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-400"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Postal Code"
-                      value={postalCode}
-                      onChange={(e) => setPostalCode(e.target.value)}
-                      className="border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-400"
-                    />
-                    <input
-                      type="number"
-                      placeholder="Phone Number"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      className="border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-400"
-                    />
-                  </div>
+                  <div className="grid lg:grid-cols-2 gap-8 p-6">
+                    {/* LEFT */}
+                    <div className="space-y-5">
+                      {/* Full Address */}
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          Full Address
+                        </label>
 
-                  {/* Submit Button */}
-                  <div>
-                    <button
-                      onClick={Handlebill}
-                      className="w-full bg-red-600 text-white py-3 rounded-md font-medium hover:bg-red-700 transition"
-                    >
-                      Submit
-                    </button>
+                        <input
+                          type="text"
+                          placeholder="Enter your full address"
+                          value={address}
+                          onChange={(e) => setAddress(e.target.value)}
+                          className="w-full rounded-xl border border-gray-300 px-4 py-3 bg-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-300 outline-none transition"
+                        />
+                      </div>
+
+                      {/* Street */}
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          Street Name
+                        </label>
+
+                        <input
+                          type="text"
+                          placeholder="Street / Area"
+                          value={street}
+                          onChange={(e) => setStreet(e.target.value)}
+                          className="w-full rounded-xl border border-gray-300 px-4 py-3 bg-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-300 outline-none transition"
+                        />
+                      </div>
+
+                      {/* City & Postal */}
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            City
+                          </label>
+
+                          <input
+                            type="text"
+                            placeholder="City"
+                            value={city}
+                            onChange={(e) => setCity(e.target.value)}
+                            className="w-full rounded-xl border border-gray-300 px-4 py-3 bg-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-300 outline-none transition"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            Postal Code
+                          </label>
+
+                          <input
+                            type="text"
+                            placeholder="Postal Code"
+                            value={postalCode}
+                            onChange={(e) => setPostalCode(e.target.value)}
+                            className="w-full rounded-xl border border-gray-300 px-4 py-3 bg-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-300 outline-none transition"
+                          />
+                        </div>
+                      </div>
+
+                      {/* House Number & Phone */}
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            House / Flat No.
+                          </label>
+
+                          <input
+                            type="text"
+                            placeholder="House / Flat Number"
+                            value={houseNumber}
+                            onChange={(e) => setHouseNumber(e.target.value)}
+                            className="w-full rounded-xl border border-gray-300 px-4 py-3 bg-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-300 outline-none transition"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            Phone Number
+                          </label>
+
+                          <input
+                            type="number"
+                            placeholder="03XXXXXXXXX"
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                            className="w-full rounded-xl border border-gray-300 px-4 py-3 bg-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-300 outline-none transition"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Special Instructions */}
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          Special Instructions
+                          <span className="ml-2 text-xs font-normal text-gray-400">
+                            (Optional)
+                          </span>
+                        </label>
+
+                        <textarea
+                          rows={2}
+                          placeholder="Example: Call before delivery, Leave at the gate, Deliver after 6 PM..."
+                          value={instructions}
+                          onChange={(e) => setInstructions(e.target.value)}
+                          className="w-full resize-none rounded-xl border border-gray-300 px-4 py-3 bg-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-300 outline-none transition"
+                        />
+                      </div>
+                    </div>
+
+                    {/* RIGHT */}
+                    <div>
+                      <div className="rounded-2xl border bg-gray-50 p-6">
+                        <h3 className="text-xl font-bold">Order Summary</h3>
+
+                        <div className="mt-5 space-y-4">
+                          <div className="flex justify-between">
+                            <span className="text-gray-500">Order ID</span>
+
+                            <span className="font-semibold">ORD-{orderId}</span>
+                          </div>
+
+                          <div className="flex justify-between">
+                            <span className="text-gray-500">Items</span>
+
+                            <span className="font-semibold">
+                              {cartItems.length}
+                            </span>
+                          </div>
+
+                          <div className="flex justify-between">
+                            <span className="text-gray-500">Shipping</span>
+
+                            <span className="text-green-600 font-semibold">
+                              FREE
+                            </span>
+                          </div>
+
+                          <hr />
+
+                          <div className="flex justify-between text-xl">
+                            <span className="font-bold">Total</span>
+
+                            <span className="font-bold text-red-600">
+                              PKR {totalPrice.toLocaleString()}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="mt-6 rounded-xl bg-yellow-50 border border-yellow-200 p-4">
+                          <p className="text-sm text-yellow-800">
+                            After placing your order, you'll be redirected to
+                            our
+                            <strong> WhatsApp </strong>
+                            where you'll send your Order ID and complete the
+                            online payment.
+                          </p>
+                        </div>
+
+                        <button
+                          onClick={Handlebill}
+                          className="mt-6 w-full rounded-2xl bg-gradient-to-r from-red-600 to-red-500 py-4 text-lg font-bold text-white hover:scale-[1.02] transition"
+                        >
+                          Place Order
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
