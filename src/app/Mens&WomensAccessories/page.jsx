@@ -10,7 +10,7 @@ export default function Menscard() {
   const Router = useRouter();
 
   useEffect(() => {
-    const rawData = localStorage.getItem("mensproduct");
+    const rawData = localStorage.getItem("menswomensproduct");
 
     if (rawData) {
       try {

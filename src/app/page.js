@@ -12,31 +12,38 @@ export default function Loader() {
 
   const fetchAndSaveCollections = async () => {
     try {
-      const collections = ["mensproduct", "womensproduct", "kidsproduct", "featuredproduct", "acceseroies"];
-      let allDataFetched = true;
+      const collections = [
+        "mens&womensproduct",
+        "Mugs&glasses",
+        "KitchenEssentials",
+        "featuredproduct",
+      ];
 
-      for (let name of collections) {
-        const querySnapshot = await getDocs(collection(db, name));
-        const data = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      for (const name of collections) {
+        try {
+          const querySnapshot = await getDocs(collection(db, name));
 
-        if (data.length === 0) {
-          allDataFetched = false;
-          break;
+          const data = querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+
+          // Empty array bhi save kar do
+          localStorage.setItem(name, JSON.stringify(data));
+
+          console.log(`✅ ${name}: ${data.length} products`);
+        } catch (err) {
+          console.error(`❌ ${name} failed`, err);
+
+          // Error aaye to empty array save kar do
+          localStorage.setItem(name, JSON.stringify([]));
         }
-
-        localStorage.setItem(name, JSON.stringify(data));
       }
 
-      if (allDataFetched) {
-        console.log("✅ All collections saved to localStorage");
-        localStorage.removeItem("retryCount"); // reset if success
-        router.push("/Home");
-      } else {
-        handleRetry();
-      }
-
+      localStorage.removeItem("retryCount");
+      router.push("/Home");
     } catch (error) {
-      console.error("❌ Error fetching collections:", error);
+      console.error(error);
       handleRetry();
     }
   };

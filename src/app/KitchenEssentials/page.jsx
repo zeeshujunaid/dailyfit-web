@@ -10,7 +10,7 @@ export default function KitchenEssentials() {
   const Router = useRouter();
 
   useEffect(() => {
-    const rawData = localStorage.getItem("kidsproduct");
+    const rawData = localStorage.getItem("Kitchenessentials");
 
     if (rawData) {
       try {

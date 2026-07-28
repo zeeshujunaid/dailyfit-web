@@ -10,7 +10,7 @@ export default function Womenscard() {
   const Router = useRouter();
 
   useEffect(() => {
-    const rawData = localStorage.getItem("womensproduct");
+    const rawData = localStorage.getItem("Mugs&glasses");
 
     if (rawData) {
       try {

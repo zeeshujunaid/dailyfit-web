@@ -8,11 +8,11 @@ export default function FeaturedProduct() {
   const [visibleCount, setVisibleCount] = useState(8);
 
   useEffect(() => {
-    const rawData = localStorage.getItem("featuredproduct");
+    const rawData = JSON.parse(localStorage.getItem("featuredproduct")) || [];
 
     if (rawData) {
       try {
-        setProducts(JSON.parse(rawData));
+        setProducts(rawData);
       } catch (err) {
         console.error("Error parsing products:", err);
       }
