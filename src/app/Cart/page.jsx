@@ -12,8 +12,7 @@ import { v4 as uuidv4 } from "uuid"; // Importing uuid for unique order ID
 export default function Cart() {
   const [cartItems, setCartItems] = useState([]);
   const [uid, setUid] = useState(null);
-  const [customerName, setCustomerName] = useState("");
-  const [customerPhone, setCustomerPhone] = useState("");
+  const [loading, setloading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
@@ -21,6 +20,7 @@ export default function Cart() {
   const [street, setStreet] = useState("");
   const [houseNumber, setHouseNumber] = useState("");
   const [city, setCity] = useState("");
+  const [placingOrder, setPlacingOrder] = useState(false);
   const [postalCode, setPostalCode] = useState("");
   const [instructions, setInstructions] = useState("");
   const [termandcondition, settermandcondition] = useState(false);
@@ -74,17 +74,16 @@ export default function Cart() {
       return;
     }
 
-    const fullAddress = `${houseNumber}, ${street}, ${city}, ${postalCode}`;
-
-    const userOrdersRef = doc(db, "orders", uid);
+    setPlacingOrder(true);
 
     try {
+      const fullAddress = `${houseNumber}, ${street}, ${city}, ${postalCode}`;
+
+      const userOrdersRef = doc(db, "orders", uid);
       const docSnap = await getDoc(userOrdersRef);
 
-      // Generate a unique order ID
-
       const newOrder = {
-        orderId: orderId,
+        orderId,
         items: cartItems.map((item) => ({
           name: item.name,
           quantity: item.quantity,
@@ -111,22 +110,21 @@ export default function Cart() {
       }
 
       toast.success("Your Order Has Been Placed");
-      // Remove the correct cart after order placed
+
       localStorage.removeItem(`cart-${uid}`);
       setCartItems([]);
       setShowModal(false);
-    } catch (error) {
-      console.error("Error saving order: ", error);
-      toast.error("Something Went Wrong, Please Try Again Later.");
-    }
 
-    // Redirect to WhatsApp
-    const whatsappNumber = "923058077535";
+      // Finish loading first
+      setPlacingOrder(false);
 
-    const auth = getAuth();
-    const customerName = auth.currentUser?.displayName || "Customer";
+      // Wait a little so user can see success
+      setTimeout(() => {
+        const whatsappNumber = "923058077535";
+        const auth = getAuth();
+        const customerName = auth.currentUser?.displayName || "Customer";
 
-    const message = `Hi, I placed an order on your website.
+        const message = `Hi, I placed an order on your website.
 
 👤 Name: ${customerName}
 🆔 Order ID: ${orderId}
@@ -135,9 +133,14 @@ export default function Cart() {
 
 Please confirm my order. I am ready to complete the online payment.`;
 
-    window.location.href = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-  };;
-
+        window.location.href = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+      }, 800); // 0.8 second delay
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong, please try again.");
+      setPlacingOrder(false);
+    }
+  };
   const handleRemoveItem = (removeIndex) => {
     const updatedCart = cartItems.filter((_, index) => index !== removeIndex);
     setCartItems(updatedCart);
@@ -164,6 +167,30 @@ Please confirm my order. I am ready to complete the online payment.`;
       localStorage.setItem(`cart-${uid}`, JSON.stringify(updatedCart));
     }
   };
+const handleProceedCheckout = () => {
+  setloading(true);
+
+  setTimeout(() => {
+    if (!cartItems.length) {
+      toast.error("Cart is empty");
+      setloading(false);
+      return;
+    }
+
+    if (!termandcondition) {
+      toast.error("Please accept the terms and conditions");
+      setloading(false);
+      return;
+    }
+
+    // Generate random 6-digit Order ID
+    const randomOrderId = Math.floor(100000 + Math.random() * 900000);
+    setOrderId(randomOrderId.toString());
+
+    setShowModal(true);
+    setloading(false);
+  }, 500); // 0.5 second loading
+};
 
   return (
     <>
@@ -358,23 +385,41 @@ Please confirm my order. I am ready to complete the online payment.`;
 
             {/* Checkout Button */}
             <button
-              className="w-full bg-red-600 text-white py-2 rounded-lg font-semibold hover:bg-red-700 transition"
-              onClick={() => {
-                if (!cartItems.length) return toast.error("Cart is empty");
-
-                if (!termandcondition)
-                  return toast.error("Please accept the terms and conditions");
-
-                // Generate random 6-digit Order ID
-                const randomOrderId = Math.floor(
-                  100000 + Math.random() * 900000,
-                );
-                setOrderId(randomOrderId.toString());
-
-                setShowModal(true);
-              }}
+              disabled={loading}
+              onClick={handleProceedCheckout}
+              className={`w-full py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2 ${
+                loading
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-red-600 hover:bg-red-700 text-white"
+              }`}
             >
-              Next
+              {loading ? (
+                <>
+                  <svg
+                    className="w-5 h-5 animate-spin"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <circle
+                      className="opacity-20"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    />
+                    <path
+                      d="M22 12a10 10 0 0 1-10 10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  Processing...
+                </>
+              ) : (
+                "Proceed to Checkout"
+              )}
             </button>
             {showModal && (
               <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md overflow-y-auto">
@@ -604,10 +649,41 @@ Please confirm my order. I am ready to complete the online payment.`;
 
                     <div className="sticky bottom-0 bg-white border-t p-5">
                       <button
+                        disabled={placingOrder}
                         onClick={Handlebill}
-                        className="w-full rounded-2xl bg-gradient-to-r from-red-600 via-red-500 to-red-600 py-4 text-lg font-bold text-white shadow-lg hover:scale-[1.02] transition"
+                        className={`w-full rounded-2xl py-4 text-lg font-bold shadow-lg transition flex items-center justify-center gap-3 ${
+                          placingOrder
+                            ? "bg-gray-400 cursor-not-allowed"
+                            : "bg-gradient-to-r from-red-600 via-red-500 to-red-600 text-white hover:scale-[1.02]"
+                        }`}
                       >
-                        Place Order & Continue to WhatsApp →
+                        {placingOrder ? (
+                          <>
+                            <svg
+                              className="w-5 h-5 animate-spin"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                            >
+                              <circle
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                strokeWidth="4"
+                                className="opacity-20"
+                              />
+                              <path
+                                d="M22 12a10 10 0 0 1-10 10"
+                                stroke="currentColor"
+                                strokeWidth="4"
+                                strokeLinecap="round"
+                              />
+                            </svg>
+                            Placing Order...
+                          </>
+                        ) : (
+                          "Place Order & Continue to WhatsApp →"
+                        )}
                       </button>
                     </div>
                   </div>

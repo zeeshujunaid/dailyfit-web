@@ -65,47 +65,75 @@ export default function MyProfileAndOrders() {
    return () => unsubscribeAuth();
  }, []);
 
+ const confirmDelete = (orderId, uid) => {
+   toast(
+     (t) => (
+       <div className="w-80">
+         <p className="font-semibold text-gray-800">Delete Order History?</p>
+
+         <p className="text-sm text-gray-500 mt-1">
+           Are you sure you want to permanently remove this order from your
+           history?
+         </p>
+
+         <div className="flex justify-end gap-2 mt-4">
+           <button
+             onClick={() => toast.dismiss(t.id)}
+             className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300"
+           >
+             Cancel
+           </button>
+
+           <button
+             onClick={() => {
+               toast.dismiss(t.id);
+               handleDelete(orderId, uid);
+             }}
+             className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700"
+           >
+             Delete
+           </button>
+         </div>
+       </div>
+     ),
+     {
+       duration: Infinity,
+     },
+   );
+ };
   
+ const handleDelete = async (orderId, uid) => {
+   try {
+     setIsDeleting(true);
 
-  const handleDelete = async (orderId, uid) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this order from your history?",
-    );
+     const orderDocRef = doc(db, "orders", uid);
+     const orderDocSnap = await getDoc(orderDocRef);
 
-    if (!confirmDelete) return;
+     if (!orderDocSnap.exists()) {
+       toast.error("Order not found");
+       return;
+     }
 
-    try {
-      setIsDeleting(true);
+     const existingOrders = orderDocSnap.data().orders || [];
 
-      const orderDocRef = doc(db, "orders", uid);
-      const orderDocSnap = await getDoc(orderDocRef);
+     const updatedOrders = existingOrders.filter(
+       (order) => order.orderId !== orderId,
+     );
 
-      if (!orderDocSnap.exists()) {
-        toast.error("Order not found");
-        return;
-      }
+     await updateDoc(orderDocRef, {
+       orders: updatedOrders,
+     });
 
-      const existingOrders = orderDocSnap.data().orders || [];
+     setOrderData(updatedOrders);
 
-      const updatedOrders = existingOrders.filter(
-        (order) => order.orderId !== orderId,
-      );
-
-      await updateDoc(orderDocRef, {
-        orders: updatedOrders,
-      });
-
-      // UI update without refresh
-      setOrderData(updatedOrders);
-
-      toast.success("Order history deleted successfully");
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to delete order");
-    } finally {
-      setIsDeleting(false);
-    }
-  };
+     toast.success("Order history deleted successfully");
+   } catch (error) {
+     console.error(error);
+     toast.error("Failed to delete order");
+   } finally {
+     setIsDeleting(false);
+   }
+ };
 
  return (
    <div className="flex flex-col min-h-screen bg-gray-100">
@@ -296,10 +324,10 @@ export default function MyProfileAndOrders() {
 
                    {order.status === "cancelled" && (
                      <button
-                       onClick={() => handleDelete(order.orderId, uid)}
+                       onClick={() => confirmDelete(order.orderId, uid)}
                        className="w-full rounded-xl bg-red-600 py-3 font-semibold text-white hover:bg-red-700 transition"
                      >
-                       Delete Order
+                       Delete This Order History
                      </button>
                    )}
                  </div>
