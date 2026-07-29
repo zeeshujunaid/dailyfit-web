@@ -62,6 +62,7 @@ export default function Loader() {
 
   useEffect(() => {
     fetchAndSaveCollections();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -96,7 +97,7 @@ export default function Loader() {
               </h2>
 
               <p className="mt-2 text-gray-500">
-                We're preparing your shopping experience.
+                We&apos;re preparing your shopping experience.
               </p>
 
               {/* Progress */}
